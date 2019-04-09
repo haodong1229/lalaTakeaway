@@ -1,0 +1,140 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li {if $operation == 'display'} class="active" {/if}><a href="{php echo $this->createWebUrl('yunfei',array('op' =>'display'))}">运费列表</a></li>
+	<li{if empty($huodong['id']) && $operation == 'post'} class="active" {/if}><a href="{php echo $this->createWebUrl('yunfei',array('op' =>'post'))}">添加运费</a></li>
+	{if !empty($huodong['id']) &&  $operation == 'post'}<li  class="active"><a href="{php echo $this->createWebUrl('yunfei',array('op' =>'post','id'=>$huodong['id']))}">编辑运费</a></li>{/if}
+</ul>
+<a href="{php echo $this->createWebUrl('yunfei',array('op'=>'tongbu'))}" class="btn btn-success">点击同步城市数据</a>
+{if $operation == 'display'}
+<div class="main panel panel-default">
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>
+					<th style="width:10%;">名称</th>
+					<th style="width:10%;">涉及区域</th>
+					<th style="text-align:right;width:20%;">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $yunfeilist $yf}
+				<tr>
+					<td>{$yf['title']}</td>
+					<td>{$yf['count']}个区域</td>
+					<td style="text-align:right;">
+						<a href="javascript:;" data-toggle="modal" data-target="#myTableModal{$yf['id']}" class="btn btn-info btn-sm">区域列表</a>
+						<a href="{php echo $this->createWebUrl('yunfei',array('op'=>'addquyu','yfid'=>$yf['id']))}" class="btn btn-success btn-sm">添加区域</a>
+						<a href="{php echo $this->createWebUrl('yunfei', array('op' => 'post', 'id' => $yf['id']))}" class="btn btn-default btn-sm" title="修改"><i class="fa fa-edit"></i></a>
+						<a href="{php echo $this->createWebUrl('yunfei', array('op' => 'delete', 'id' => $yf['id']))}" onclick="return confirm('确认删除吗？');return false;" class="btn btn-danger btn-sm">删除</a>
+					</td>
+				</tr>
+				{/loop}
+			</tbody>
+		</table>
+	</div>
+</div>
+{loop $yunfeilist $yf}
+	<div class="modal fade" id="myTableModal{$yf['id']}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">区域列表</h4>
+				</div>
+				<div class="modal-body table-responsive">					
+					<table class="table table-hover table-bordered">
+						<thead class="navbar-inner">
+							<tr>
+								<th style="width:30%;">区域名称</th>
+								<th style="width:15%;">运费金额</th>
+								<th style="width:10%;">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							{loop $yf['yfsheng'] $rowrow}
+							<tr>
+								<td>{$rowrow['name']}{$rowrow['city']}{$rowrow['xian']}</td>
+								<td><span class="label label-info">{$rowrow['money']}</span></td>
+								<td>
+									<a href="{php echo $this->createWebUrl('yunfei', array('op' => 'deletediqu', 'id' => $rowrow['id']))}" onclick="return confirm('确认删除吗？');return false;" class="btn btn-danger btn-sm">删除</a>
+								</td>
+							</tr>
+							{/loop}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{/loop}
+{elseif $operation == 'post'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" onsubmit='return formcheck()'>
+		<input type="hidden" name="id" value="{$yunfei['id']}" />
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				运费配置
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">名称</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="title" class="form-control" value="{$yunfei['title']}" />
+					</div>
+				</div>				
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+<script>
+$(function(){
+	$("#diqutype1").on("click",function(){
+		$(".selgroup").hide();
+		$(".selgroup").eq(0).attr("multiple","multiple").show();
+	})
+	$("#diqutype2").on("click",function(){
+		$(".selgroup").hide();
+		$(".selgroup").eq(0).removeAttr("multiple").show();
+		$(".selgroup").eq(1).attr("multiple","multiple").show();
+	})
+	$("#diqutype3").on("click",function(){
+		$(".selgroup").show();
+		$(".selgroup").eq(0).removeAttr("multiple");
+		$(".selgroup").eq(1).removeAttr("multiple");
+	})
+	$(".dodiqu").on("change",".provinceselect",function(){
+		var obj = $(this);
+		$.ajax({   
+			url:"{php echo $this->createWebUrl('yunfei',array('op'=>'getcitys'))}",   
+			type:'post', 
+			data:{
+				fcode:$(this).find("option:selected").attr('data-code'),
+			},
+			dataType:'html',
+			success:function(data){   
+				obj.next('select').html(data);
+			}
+		});
+	});
+	$(".dodiqu").on("change",".cityselect",function(){
+		var obj = $(this);
+		$.ajax({   
+			url:"{php echo $this->createWebUrl('yunfei',array('op'=>'getdistricts'))}",   
+			type:'post', 
+			data:{
+				fcode:$(this).find("option:selected").attr('data-code'),
+			},
+			dataType:'html',
+			success:function(data){   
+				obj.next('select').html(data);
+			}
+		});
+	});
+})
+</script>
+{/if}
+{template 'common/footer'}

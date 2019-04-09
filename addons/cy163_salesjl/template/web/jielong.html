@@ -1,0 +1,194 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li {if $operation == 'display'} class="active" {/if}><a href="{php echo $this->createWebUrl('jielong',array('op' =>'display'))}">接龙管理</a></li>
+</ul>
+
+{if $operation == 'display'}
+<div class="main">
+	<div class="panel panel-info">
+		<div class="panel-heading">筛选</div>
+		<div class="panel-body">
+			<form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="cy163_salesjl" />
+				<input type="hidden" name="do" value="jielong" />
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 control-label">接龙名称</label>
+					<div class="col-sm-4 col-xs-12">
+						<input class="form-control" name="keyword" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询接龙名称">
+					</div>
+					
+					<div class="col-sm-4 col-xs-12">
+						<input type="hidden" name="status" value="{$status}" />
+						<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+						<button type="button" class="btn btn-default">总记录数：{$total}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+					<tr>
+						<th style="width:5%;">ID</th>
+						<th style="width:25%;">接龙标题</th>
+						<th style="width:10%;">发布用户</th>
+						<th style="width:10%;">异常状态</th>
+						<th style="text-align:right;">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{loop $list $jielong}
+					<tr>
+						<td>{$jielong['id']}</td>
+						<td>
+							<div>{$jielong['title']}</div>
+							<div style="margin-top:5px;">{php echo date("Y-m-d H:i:s",$jielong['starttime'])}</div>
+							<div style="margin-top:5px;">{php echo date("Y-m-d H:i:s",$jielong['endtime'])}</div>
+							<div style="margin-top:5px;"><span class="label label-info">参与{$jielong['inpeople']}人</span></div>
+						</td>
+						<td>
+							<div><img src="{$jielong['member']['avatar']}" width="40" height="40" /></div>
+							<div style="margin-top:5px;"><span class="label label-default">{$jielong['member']['nickname']}</span></div>
+						</td>
+						<td>
+							{if $jielong['admindel'] == 1}
+								<span class="label label-danger">管理员结束</span>
+							{else}
+								{if $jielong['owndel'] == 1}
+									<span class="label label-danger">用户结束</span>
+								{else}
+									{if $jielong['endtime'] < TIMESTAMP}<span class="label label-danger">到期自动结束</span>{/if}
+								{/if}
+							{/if}
+						</td>
+						<td style="text-align:right;">
+							<div>
+								<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#goodsModal{$jielong['id']}">查看商品</button>
+								<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#shareModal{$jielong['id']}">配置其他项</button>
+								<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#xcxModal{$jielong['id']}">小程序连接</button>
+							</div>
+							<div style="margin-top:5px;">
+								{if $jielong['status'] == 0}
+									<a href="{php echo $this->createWebUrl('jielong',array('op'=>'shenhe','id'=>$jielong['id']))}" class="btn btn-success btn-sm">审核</a>
+								{else}
+									{if $jielong['admindel'] == 0 && $jielong['owndel'] == 0 && $jielong['endtime'] > TIMESTAMP}
+										<a href="{php echo $this->createWebUrl('jielong',array('op'=>'zanting','id'=>$jielong['id']))}" class="btn btn-danger btn-sm">提前结束</a>
+									{/if}
+								{/if}
+								
+								{if $jielong['ordernum'] <= 0}
+									<a href="{php echo $this->createWebUrl('jielong', array('op' => 'delete', 'id' => $jielong['id']))}" onclick="return confirm('此操作不可恢复，确认删除吗？');return false;" class="btn btn-default btn-sm" title="删除"><i class="fa fa-times"></i></a>
+								{/if}
+							</div>
+						</td>
+					</tr>
+					{/loop}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{loop $list $jielong}
+	<div class="modal fade" id="goodsModal{$jielong['id']}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">商品列表</h4>
+				</div>
+				<div class="modal-body table-responsive">					
+					<table class="table table-hover table-striped table-condensed">
+						<thead>
+							<tr>
+								<th style="width:15%;">商品标题</th>
+								<th>价格</th>
+								<th style="width:15%;">参与人数</th>
+							</tr>
+						</thead>
+						<tbody>
+							{loop $jielong['goodslist'] $rowgoods}
+								<tr>
+									<td>
+										<span class="label label-success">{$rowgoods['title']}</span>
+									</td>
+									<td>
+										<span class="label label-success">{$rowgoods['normalprice']}</span>
+									</td>
+									<td>
+										<span class="label label-info">{$rowgoods['inpeople']}</span>
+									</td>
+								</tr>
+							{/loop}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" style="z-index:1021;" id="shareModal{$jielong['id']}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">配置分享图</h4>
+				</div>
+				<div class="modal-body table-responsive">					
+					<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data">
+						<input type="hidden" name="id" value="{$jielong['id']}" />
+						<input type="hidden" name="op" value="upshare" />
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">幻灯片图片</label>
+							<div class="col-sm-9 col-xs-12">
+								{php echo tpl_form_field_image('sharethumb', $jielong['sharethumb'], '', array('extras' => array('text' => 'readonly')))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">基础销售量</label>
+							<div class="col-sm-8 col-lg-9 col-xs-12">
+								<input class="form-control" name="basicsales" type="text" value="{$jielong['basicsales']}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">基础浏览量</label>
+							<div class="col-sm-8 col-lg-9 col-xs-12">
+								<input class="form-control" name="basicviews" type="text" value="{$jielong['basicviews']}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="submit" name="submit" value="提交" class="btn btn-primary" />
+								<input type="hidden" name="token" value="{$_W['token']}" />
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" style="z-index:1021;" id="xcxModal{$jielong['id']}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">小程序连接</h4>
+				</div>
+				<div class="modal-body table-responsive">					
+					../detail/detail?id={$jielong['id']}
+				</div>
+			</div>
+		</div>
+	</div>
+{/loop}
+{$pager}
+<script>
+
+</script>
+{/if}
+{template 'common/footer'}

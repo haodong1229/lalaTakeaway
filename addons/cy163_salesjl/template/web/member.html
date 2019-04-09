@@ -1,0 +1,183 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li {if $operation == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('member', array('op' => 'display'))}">会员管理</a></li>
+	{if $operation == 'account'}
+		<li class="active"><a href="###">操作账户</a></li>
+	{/if}
+</ul>
+
+{if $operation == 'display'}
+<div class="main">
+	<div class="panel panel-info">
+		<div class="panel-heading">筛选</div>
+		<div class="panel-body">
+			<form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="cy163_salesjl" />
+				<input type="hidden" name="do" value="member" />
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">昵称</label>
+					<div class="col-sm-4 col-xs-12">
+						<input class="form-control" name="nickname" type="text" value="{$_GPC['nickname']}" placeholder="可查询昵称">
+					</div>
+					<div class="col-sm-4 col-xs-12">
+						<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+						<button type="button" class="btn btn-default">总记录数：{$total}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<div class="agent">
+		<div class="panel panel-default">
+			<div class="panel-body table-responsive">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th style="width:8%;">头像</th>
+							<th style="width:30%;">昵称/性别/Openid</th>
+							<th style="width:20%;">注册时间</th>
+							<th style="text-align:right;">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+					{loop $list $row}
+					<tr>
+						<td>
+							<img src="{$row['avatar']}" width='50' height="50" style="border-radius:50px;margin-right:5px;" />
+						</td>
+						<td>
+							<div>
+								<span class='label label-default'>{$row['nickname']}</span>
+								<span class='label label-info'>{$row['gender']}</span>
+							</div>
+							<div style="margin-top:5px;"><span class='label label-success'>{$row['openid']}</span></div>
+						</td>
+						<td>{php echo date('Y-m-d H:i:s', $row['regtime'])}</td>
+						<td style="text-align:right;">
+							<button type="button" data-toggle="modal" data-target="#zhanghu{$row['id']}" class="btn btn-warning btn-sm">账户明细</button>
+							<a href="{php echo $this->createWebUrl('member', array('op' => 'account', 'id' => $row['id']))}" class="btn btn-success btn-sm">操作账户</a>
+							<a href="{php echo $this->createWebUrl('member', array('op' => 'delete', 'id' => $row['id']))}" onclick="return confirm('此操作不可恢复，确认吗？');return false;" class="btn btn-default btn-sm" title="删除"><i class="fa fa-times"></i></a>
+						</td>
+					</tr>
+					{/loop}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	{$pager}
+</div>
+
+{loop $list $row}
+<div class="modal fade" id="zhanghu{$row['id']}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">{$row['nickname']}的账户明细</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-hover table-striped table-condensed">
+					<thead>
+						<tr>
+							<th style="width:15%;">说明</th>
+							<th style="width:15%;">金额</th>
+							<th style="width:30%;">时间</th>
+							<th style="text-align:right;">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{loop $row['moneylist'] $rowchat}
+							<tr class="trre{$rowchat['id']}">
+								<td>
+									<span class="label label-info">{$rowchat['explain']}</span>
+								</td>
+								<td>
+									{if $rowchat['money'] > 0}
+										<span class="label label-success">{$rowchat['money']}</span>
+									{else}
+										<span class="label label-danger">{$rowchat['money']}</span>
+									{/if}
+								</td>
+								<td>
+									{php echo date("Y-m-d H:i:s",$rowchat['time'])}
+								</td>
+								<td style="text-align:right;">
+									<a data-id="{$rowchat['id']}" class="btn btn-default btn-sm deldu" title="删除"><i class="fa fa-times"></i></a>
+								</td>
+							</tr>
+						{/loop}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{/loop}
+<script>
+$(function(){
+	$(".fa").click(function(){
+		$("tr[data-fid="+$(this).attr('data-id')+"]").toggle();
+		if($(this).hasClass("fa-chevron-down")){
+			$(this).removeClass('fa-chevron-down').addClass('fa-chevron-up');
+		}else{
+			$(this).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+		}
+	});
+	
+	$('.deldu').click(function(){
+		if(confirm("确定要删除这条记录吗？")){
+			var chatid = $(this).attr('data-id');
+			$.ajax({
+				url:"{php echo $this->createWebUrl('member')}",
+				data:{
+					id:chatid,
+					op:'deletedu',
+				},
+				dataType:'json',
+				type:'post',        
+				success:function(data){
+					if(data.error == 1){
+						alert(data.msg);
+					}else{
+						$('.trre'+chatid).remove();
+					}
+				},
+			});
+		}
+	});
+})
+</script>
+{elseif $operation == 'account'}
+<div class="main">
+	<form action="{php echo $this->createWebUrl('member', array('op' => 'doaccount'))}" method="post" class="form-horizontal form">
+		<input type="hidden" name="openid" value="{$member['openid']}" />
+		<div class="panel panel-default">
+			<div class="panel-heading">操作账户 - {$member['nickname']} - 总金额{$allmoney}元</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">金额</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="money" class="form-control" />
+						<span class="help-block" style="color:red;">*减金额填负数即可</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">说明</label>
+					<div class="col-sm-9 col-xs-12">
+						<textarea name="explain" class="form-control" style="height:200px;">系统操作</textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+{/if}
+{template 'common/footer'}

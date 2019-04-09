@@ -1,0 +1,108 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li class="active"><a href="###">运费区域操作</a></li>
+</ul>
+
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" onsubmit='return formcheck()'>
+		<input type="hidden" name="id" value="{$yunfei['id']}" />
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				运费区域配置
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">运费金额</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="money" class="form-control" value="" />
+					</div>
+				</div>			
+				
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">地区类型</label>
+					<div class="col-sm-9 col-xs-12">
+						<label for="diqutype1" class="radio-inline"><input name="diqutype" value="1" id="diqutype1" type="radio"> 省</label>
+						&nbsp;&nbsp;&nbsp;
+						<label for="diqutype2" class="radio-inline"><input name="diqutype" value="2" id="diqutype2" type="radio"> 市</label>
+						&nbsp;&nbsp;&nbsp;
+						<label for="diqutype3" class="radio-inline"><input name="diqutype" value="3" id="diqutype3" checked="true" type="radio"> 区/县</label>
+					</div>
+				</div>
+				
+	
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">选择地区</label>
+					<div class="col-sm-9 col-xs-12 dodiqu">
+						<select name="name[]" class="form-control provinceselect selgroup">
+							<option value="">选择省</option>
+							{loop $provincelist $prow}
+								<option value="{$prow['name']}" {if $prow['has']}selected="selected"{/if} data-code="{$prow['code']}">{$prow['name']}</option>
+							{/loop}
+						</select>
+						<select name="city[]" class="form-control cityselect selgroup">
+							<option value="">选择市</option>
+						</select>
+
+						<select name="xian[]" class="form-control districtselect selgroup" multiple="multiple">
+							<option value="">选择区/县</option>
+						</select>
+						<span class="help-block" style="color:red;">按住Ctrl键可选择多个</span>
+						<span class="help-block" style="color:red;">*运费模板区域=可下单区域</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input type="hidden" name="yfid" value="{$yfid}" />
+			<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+<script>
+$(function(){
+	$("#diqutype1").on("click",function(){
+		$(".selgroup").hide();
+		$(".selgroup").eq(0).attr("multiple","multiple").show();
+	})
+	$("#diqutype2").on("click",function(){
+		$(".selgroup").hide();
+		$(".selgroup").eq(0).removeAttr("multiple").show();
+		$(".selgroup").eq(1).attr("multiple","multiple").show();
+	})
+	$("#diqutype3").on("click",function(){
+		$(".selgroup").show();
+		$(".selgroup").eq(0).removeAttr("multiple");
+		$(".selgroup").eq(1).removeAttr("multiple");
+	})
+	$(".dodiqu").on("change",".provinceselect",function(){
+		var obj = $(this);
+		$.ajax({   
+			url:"{php echo $this->createWebUrl('yunfei',array('op'=>'getcitys'))}",   
+			type:'post', 
+			data:{
+				fcode:$(this).find("option:selected").attr('data-code'),
+			},
+			dataType:'html',
+			success:function(data){   
+				obj.next('select').html(data);
+			}
+		});
+	});
+	$(".dodiqu").on("change",".cityselect",function(){
+		var obj = $(this);
+		$.ajax({   
+			url:"{php echo $this->createWebUrl('yunfei',array('op'=>'getdistricts'))}",   
+			type:'post', 
+			data:{
+				fcode:$(this).find("option:selected").attr('data-code'),
+			},
+			dataType:'html',
+			success:function(data){   
+				obj.next('select').html(data);
+			}
+		});
+	});
+})
+</script>
+{template 'common/footer'}

@@ -1,0 +1,131 @@
+{template 'common/header'}
+
+<ul class="nav nav-tabs">
+	<li {if $typefilter == 0}class="active"{/if}><a href="{php echo $this->createWebUrl('renzheng')}">个人(已审核)</a></li>
+	<li {if $typefilter == 1}class="active"{/if}><a href="{php echo $this->createWebUrl('renzheng',array('typefilter'=>1))}">个人(待审核)</a></li>
+	<li {if $typefilter == 2}class="active"{/if}><a href="{php echo $this->createWebUrl('renzheng',array('typefilter'=>2))}">企业(已审核)</a></li>
+	<li {if $typefilter == 3}class="active"{/if}><a href="{php echo $this->createWebUrl('renzheng',array('typefilter'=>3))}">企业(待审核)</a></li>
+</ul>
+
+{if $operation == 'display'}
+<div class="main panel panel-default">
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>
+					<th style="width:10%;">微信昵称</th>					
+					<th style="width:6%;">金额</th>
+					<th style="width:12%;">订单编号</th>
+					<th style="width:20%;">时间</th>
+					<th style="width:8%;">支付</th>
+					<th style="text-align:right;">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $list $rz}
+				<tr>
+					<td>
+						<div><img src="{$rz['avatar']}" style="width:50px;height:50px;" /></div>
+						<div style="margin-top:5px;"><span class="label label-info">{$rz['nickname']}</span></div>
+					</td>
+					<td>{$rz['rzprice']}</td>
+					<td>{$rz['rzordersn']}</td>
+					<td>
+						<div><span class="label label-info">提交时间：{php echo date('Y-m-d H:i:s', $rz['rztime'])}</span></div>
+						<div style="margin-top:5px;">
+						{if $rz['tgtime'] > 0}
+							<span class="label label-success">通过时间：{php echo date('Y-m-d H:i:s', $rz['tgtime'])}</span>
+						{else}
+							<span class="label label-success">通过时间：无</span>
+						{/if}
+						</div>
+						<div style="margin-top:5px;">
+						{if $rz['jjtime'] > 0}
+							<span class="label label-danger">拒绝时间：{php echo date('Y-m-d H:i:s', $rz['jjtime'])}</span>
+						{else}
+							<span class="label label-danger">拒绝时间：无</span>
+						{/if}
+						</div>
+					</td>
+					<td>
+						{if $rz['rzstatus'] == 1}<span class="label label-success">已支付</span>{/if}
+						{if $rz['rzstatus'] == 0}<span class="label label-danger">未支付</span>{/if}
+					</td>
+					<td style="text-align:right;">						
+						<button type="button" data-toggle="modal" data-target="#renzheng{$rz['id']}" class="btn btn-info btn-sm">认证详情</button>
+						{if $rz['brztype'] == 0}
+						<a href="{php echo $this->createWebUrl('renzheng',array('op'=>'tongguo','id'=>$rz['id']))}" onclick="return confirm('确认通过吗？');return false;" class="btn btn-success btn-sm">通过</a>
+						{/if}
+						<button onclick="refuse_cash('{$rz['id']}');" class="btn btn-default btn-sm">拒绝</button>
+						<a href="{php echo $this->createWebUrl('renzheng', array('op' => 'delete2', 'id' => $rz['id']))}"class="btn btn-default btn-sm" onclick="return confirm('此操作不可恢复，确认删除？');return false;" title="删除"><i class="fa fa-times"></i></a>
+					</td>
+				</tr>
+				{/loop}
+			</tbody>
+		</table>
+	</div>
+</div>
+{$pager}
+{loop $list $rz}
+<div class="modal fade" id="renzheng{$rz['id']}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">认证详情</h4>
+			</div>
+			<div class="modal-body">
+				{if $rz['rztype'] == 1}
+				<div>姓名：{$rz['rzrealname']}</div>
+				<div>身份证号：{$rz['rzidcard']}</div>
+				<div><img src="{php echo tomedia($rz['idcard1'])}" style="max-width:100%;" /></div>
+				<div><img src="{php echo tomedia($rz['idcard2'])}" style="max-width:100%;margin-top:5px;" /></div>
+				<div>手机号：{$rz['rztelphone']}</div>
+				{else}
+				<div>企业名称：{$rz['rzqiyename']}</div>
+				<div><img src="{php echo tomedia($rz['rzsanzheng'])}" style="max-width:100%;" /></div>
+				<div>法人姓名：{$rz['rzrealname']}</div>
+				<div>身份证号：{$rz['rzidcard']}</div>
+				<div><img src="{php echo tomedia($rz['idcard1'])}" style="max-width:100%;margin-top:5px;" /></div>
+				<div><img src="{php echo tomedia($rz['idcard2'])}" style="max-width:100%;margin-top:5px;" /></div>
+				<div>手机号：{$rz['rztelphone']}</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+</div>
+
+{/loop}
+<script>
+function refuse_cash(id) {
+	require(['jquery', 'util'], function($, u) {
+		var content =  '	<div class="form-group">';
+			content += '	<textarea name="jujuesm" class="fedback form-control" rows="5" placeholder="拒绝原因"></textarea>';
+			content += '	</div>';
+
+		var footer =
+				'<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
+				'<button type="button" class="btn btn-success">确定</button>';
+		var diaobj = u.dialog('拒绝认证', content, footer);
+		diaobj.find('.btn-default').click(function() {
+			diaobj.modal('hide');
+		});
+		diaobj.find('.btn-success').click(function() {
+			$.post("{php echo $this->createWebUrl('renzheng', array('op' => 'delete'))}",{
+				id:id,
+				jujuesm:diaobj.find('.fedback').val()
+			},function(resp) {
+				if(resp.status==1){
+					alert(resp.info);
+					location.reload();
+				}else{
+					alert(resp.info);
+				}
+			});
+		});
+		diaobj.modal('show');
+	});
+}
+</script>
+{/if}
+{template 'common/footer'}

@@ -1,0 +1,106 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">		
+	<li {if $operation == 'display'} class="active" {/if}><a href="{php echo $this->createWebUrl('city',array('op' =>'display'))}">城市列表</a></li>
+	<li{if empty($city['id']) && $operation == 'post'} class="active" {/if}><a href="{php echo $this->createWebUrl('city',array('op' =>'post'))}">添加城市</a></li>
+	{if !empty($city['id']) &&  $operation == 'post'}<li  class="active"><a href="{php echo $this->createWebUrl('city',array('op' =>'post','id'=>$city['id']))}">编辑城市</a></li>{/if}
+</ul>
+
+{if $operation == 'display'}
+<div class="main panel panel-default">
+	<div class="panel-body table-responsive">
+		<form action="" method="post">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>
+					<th style="width:8%;">排序</th>
+					<th style="width:40%;">城市名称</th>
+					<th style="text-align:right;">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $list $city}
+				<tr>
+					<td><input class="form-control" name="displayorder[{$city['id']}]" value="{$city['displayorder']}" type="text"></td>
+					<td>
+						<span class="label label-success">{$city['name']}</span>{if $city['fid'] == 0}<a href="{php echo $this->createWebUrl('city',array('fid'=>$city['id'],'op' =>'post'))}" style="color:#5bc0de;margin-left:5px;"><i class="fa fa-plus-circle"></i> 添加下级区域</a>{/if}
+					</td>
+					<td style="text-align:right;">
+						<a href="{php echo $this->createWebUrl('city', array('op' => 'post', 'id' => $city['id']))}" class="btn btn-default btn-sm" title="修改"><i class="fa fa-edit"></i></a>
+						<a href="{php echo $this->createWebUrl('city', array('op' => 'delete', 'id' => $city['id']))}"class="btn btn-default btn-sm" onclick="return confirm('此操作不可恢复，确认删除？');return false;" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-times"></i></a>
+					</td>
+				</tr>
+					{loop $city['erji'] $row}
+					<tr>
+						<td><input class="form-control" name="displayorder[{$row['id']}]" value="{$row['displayorder']}" type="text"></td>
+						<td>
+							<div style="padding-left:50px;height:30px;line-height:30px;background:url('./resource/images/bg_repno.gif') no-repeat -245px -545px;"><span class="label label-success">{$row['name']}</span></div>
+						</td>
+						<td style="text-align:right;">
+							<a href="{php echo $this->createWebUrl('city', array('op' => 'post', fid=>$row['fid'],'id' => $row['id']))}" class="btn btn-default btn-sm" title="修改"><i class="fa fa-edit"></i></a>
+							<a href="{php echo $this->createWebUrl('city', array('op' => 'delete', 'id' => $row['id']))}"class="btn btn-default btn-sm" onclick="return confirm('此操作不可恢复，确认删除？');return false;" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-times"></i></a>
+						</td>
+					</tr>
+					{/loop}
+				{/loop}
+				<tr>
+					<td colspan="6">
+						<input name="token" value="{$_W['token']}" type="hidden">
+						<input name="op" value="display" type="hidden">
+						<input name="submit" class="btn btn-primary" value="修改排序" type="submit">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</form>
+	</div>
+</div>
+{$pager}
+{elseif $operation == 'post'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data">
+		<input type="hidden" name="id" value="{$city['id']}" />
+		<div class="panel panel-default">
+			<div class="panel-heading">城市设置</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">排序</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="displayorder" class="form-control" value="{$city['displayorder']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">城市名称</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="name" class="form-control" value="{$city['name']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">首字母</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="firstz" class="form-control" value="{$city['firstz']}" />
+					</div>
+				</div>
+				{if $fid > 0}
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">上级分类</label>
+						<div class="col-sm-9 col-xs-12">					
+							<select name="fid" class="form-control">
+								<option value="请选择">选择上级分类</option>
+								{loop $citylist $cat}
+								<option value="{$cat['id']}" {if $cat['id'] == $fid}selected="selected"{/if}>{$cat['name']}</option>
+								{/loop}
+							</select>
+						</div>
+					</div>
+				{/if}
+			</div>
+		</div>
+
+		<div class="form-group col-sm-12">
+			<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+{/if}
+{template 'common/footer'}

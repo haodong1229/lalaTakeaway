@@ -1,0 +1,213 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">		
+	<li {if $operation == 'display'} class="active" {/if}><a href="{php echo $this->createWebUrl('village',array('op' =>'display'))}">小区列表</a></li>
+	<li{if empty($village['id']) && $operation == 'post'} class="active" {/if}><a href="{php echo $this->createWebUrl('village',array('op' =>'post'))}">添加小区</a></li>
+	{if !empty($village['id']) &&  $operation == 'post'}<li  class="active"><a href="{php echo $this->createWebUrl('village',array('op' =>'post','id'=>$village['id']))}">编辑小区</a></li>{/if}
+	<li {if $operation == 'piliang'}class="active"{/if}><a href="{php echo $this->createWebUrl('village',array('op' =>'piliang'))}">批量导入</a></li>
+</ul>
+
+{if $operation == 'display'}
+<div class="main">
+	<div class="panel panel-info">
+		<div class="panel-heading">筛选</div>
+		<div class="panel-body">
+			<form action="./index.php" method="get" class="form-horizontal" role="form">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="cy163_salesjl" />
+				<input type="hidden" name="do" value="village" />
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键词</label>
+					<div class="col-xs-12 col-sm-4">
+						<input class="form-control" name="keyword" placeholder="请输入小区名称搜索" type="text" value="{$_GPC['keyword']}">
+					</div>
+					<div class="col-sm-4 col-xs-12">
+						<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+						<button class="btn btn-default" type="button">总记录数：{$total}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+			<form action="" method="post">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+					<tr>
+						<th class="row-first" style="width:8%;">选择</th>
+						<th style="width:8%;">排序</th>
+						<th style="width:8%;">小区ID</th>
+						<th style="width:20%;">小区名称</th>
+						<th style="width:40%;">小区地址</th>
+						<th style="text-align:right;">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{loop $list $village}
+					<tr>
+						<td><input class="checkbox" name="xqid[{$village['id']}]" value="1" type="checkbox"></td>
+						<td><input class="form-control" name="displayorder[{$village['id']}]" value="{$village['displayorder']}" type="text"></td>
+						<td>{$village['id']}</td>
+						<td>
+							{if $village['isuser'] == 1}<span class="label label-success">用户添加</span>{/if}
+							{$village['name']}
+						</td>
+						<td>{$village['address']}</td>
+						<td style="text-align:right;">
+							<a href="{php echo $this->createWebUrl('village', array('op' => 'post', 'id' => $village['id']))}" class="btn btn-default btn-sm" title="修改"><i class="fa fa-edit"></i></a>
+							<a href="{php echo $this->createWebUrl('village', array('op' => 'delete', 'id' => $village['id']))}"class="btn btn-default btn-sm" onclick="return confirm('此操作不可恢复，确认删除？');return false;" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-times"></i></a>
+						</td>
+					</tr>
+					{/loop}
+					<tr>
+						<td></td>
+						<td colspan="5">
+							<input name="token" value="{$_W['token']}" type="hidden">
+							<input name="op" value="display" type="hidden">
+							<button class="btn btn-success" onclick="selall()" type="button">全选</button>
+							<button class="btn btn-default" onclick="cancelall()" type="button">取消</button>
+							<button type="submit" name="allpx" value="allpx" class="btn btn-primary">修改排序</button>
+							<button type="submit" name="alldel" value="alldel" class="btn btn-danger" onclick="return confirm('你真的要删除吗？') ? true : false;">批量删除</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</form>
+		</div>
+	</div>
+	{$pager}
+</div>
+<script>
+function selall(){
+	$("input.checkbox").prop('checked',true);
+}
+function cancelall(){
+	$("input.checkbox").prop('checked',false);
+}
+</script>
+{elseif $operation == 'piliang'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data">
+		<div class="panel panel-default">
+			<div class="panel-heading">请上传csv格式的文件</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="file" name="wenjian" class="form-control" />
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+			<div class="col-sm-9 col-xs-12">
+				<input type="submit" name="submit" value="提交" class="btn btn-primary" />
+				<button type="submit" name="moxing" value="moxing" class="btn btn-success">导出文件模型</button>
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</div>
+	</form>
+</div>
+{elseif $operation == 'post'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data">
+		<input type="hidden" name="id" value="{$village['id']}" />
+		<div class="panel panel-default">
+			<div class="panel-heading">小区设置</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">排序</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="displayorder" class="form-control" value="{$village['displayorder']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">小区名称</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="name" class="form-control" value="{$village['name']}" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">小区Logo</label>
+					<div class="col-sm-9 col-xs-12">
+						{php echo tpl_form_field_image('logo', $village['logo'], '', array('extras' => array('text' => 'readonly')))}
+						<span class="help-block" style="color:red;">*推荐尺寸100*100</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">小区地址</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="address" class="form-control" value="{$village['address']}" />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 control-label">坐标</label>
+					<div class="col-sm-9 col-xs-12">
+						{if $id}
+						<input type="text" name="zbs" class="form-control" value="{$village['weidu']},{$village['jingdu']}" />
+						{else}
+						<input type="text" name="zbs" class="form-control" value="" />
+						{/if}
+						<span class="help-block" style="color:red;">以xxx,xxx的格式输入即可<a href="http://lbs.qq.com/tool/getpoint/" style="color:green;" target="_blank">点击获取坐标</a></span>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">团长信息</label>
+					<div class="col-sm-7 col-xs-12">
+						<input type="text" id="zzkey" class="form-control" placeholder="输入团长名称或openid按右侧按钮搜索" value="" />
+						<span class="help-block" style="color:red;">*只有已审核的团长，并且没有绑定为小区团长的才可以搜索到</span>
+					</div>
+					<div class="col-sm-2 col-xs-12">
+						<button class="btn btn-primary" id="searchtz" type="button">搜索</button>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">团长Openid</label>
+					<div class="col-sm-7 col-xs-12">
+						<input type="text" readonly name="zzopenid" class="form-control" id="zzopenid" value="{$village['zzopenid']}" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group col-sm-12">
+			<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+<script>
+$(function(){
+	$("#searchtz").click(function(){
+		if($("#zzkey").val() == ""){
+			alert("请输入团长名称或openid搜索！");
+		}else{
+			$.ajax({   
+				url:"{php echo $this->createWebUrl('village',array('op'=>'search'))}",   
+				type:'post', 
+				data:{
+					zzkey:$("#zzkey").val(),
+				},
+				dataType:'json',
+				success:function(data){   
+					if(data.error == 1){
+						alert(data.merres);
+					}else{
+						$("#zzkey").val(data.merres.name);
+						$("#zzopenid").val(data.merres.openid);
+					}
+				}
+			});
+		}
+	});
+});
+</script>
+{/if}
+{template 'common/footer'}

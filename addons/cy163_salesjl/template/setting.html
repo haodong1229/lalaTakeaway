@@ -1,0 +1,724 @@
+{template 'common/header'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="form1">
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a href="#basic" role="tab" data-toggle="tab">基本设置</a></li>
+			<li role="presentation"><a href="#tuanzhang" role="tab" data-toggle="tab">团长申请</a></li>
+			<li role="presentation"><a href="#share" role="tab" data-toggle="tab">自定义分享</a></li>
+			<li role="presentation"><a href="#tixian" role="tab" data-toggle="tab">提现退款设置</a></li>
+			<li role="presentation"><a href="#tpl" role="tab" data-toggle="tab">模板消息设置</a></li>
+			<li role="presentation"><a href="#kuaidi" role="tab" data-toggle="tab">快递物流</a></li>
+			<li role="presentation"><a href="#renzheng" role="tab" data-toggle="tab">认证设置</a></li>
+			<li role="presentation"><a href="#tuandui" role="tab" data-toggle="tab">团队设置</a></li>
+			<li role="presentation"><a href="#adv" role="tab" data-toggle="tab">广告设置</a></li>
+			<li role="presentation"><a href="#tongbu" role="tab" data-toggle="tab">同步设置</a></li>
+			<li role="presentation"><a href="#haibao" role="tab" data-toggle="tab">海报设置</a></li>
+			<li role="presentation"><a href="#abouts" role="tab" data-toggle="tab">关于我们</a></li>
+		</ul>
+		
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane panel active panel-default" id="basic">
+				<div class="panel-heading">基本设置</div>
+				<div class="panel-body">
+
+					{if $_W["account"]["type_name"] == "微信小程序"}
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">小程序审核小区id</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="xcxxqid" class="form-control" value="{$settings['xcxxqid']}"/>
+							<span class="help-block" style="color:red;">*用于小程序审核专用，不用审核填0即可</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">系统模式</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline"><input type="radio" name="moshi" value="1" {if $settings['moshi'] == 1}checked="true"{/if} /> 自发接龙模式</label>
+							&nbsp;&nbsp;&nbsp;
+							<label class="radio-inline"><input type="radio" name="moshi" value="0" {if $settings['moshi'] == 0}checked="true"{/if} /> 社区团购模式</label>		
+							<div class="help-block" style="color:red;">*选择自发接龙模式小程序入口将直接跳转至自发接龙</div>
+						</div>
+					</div>
+					{/if}
+
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">社区团购模板</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline"><input type="radio" name="temstyle" value="1" {if $settings['temstyle'] == 1}checked="true"{/if} /> 模板1</label>
+							&nbsp;&nbsp;&nbsp;
+							<label class="radio-inline"><input type="radio" name="temstyle" value="0" {if $settings['temstyle'] == 0}checked="true"{/if} /> 模板2</label>		
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">自发团购</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline"><input type="radio" name="zfon" value="1" {if $settings['zfon'] == 1}checked="true"{/if} /> 开启</label>
+							&nbsp;&nbsp;&nbsp;
+							<label class="radio-inline"><input type="radio" name="zfon" value="0" {if $settings['zfon'] == 0}checked="true"{/if} /> 关闭</label>		
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">自发团购审核</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline"><input type="radio" name="iszfjlsh" value="1" {if $settings['iszfjlsh'] == 1}checked="true"{/if} /> 开启</label>
+							&nbsp;&nbsp;&nbsp;
+							<label class="radio-inline"><input type="radio" name="iszfjlsh" value="0" {if $settings['iszfjlsh'] == 0}checked="true"{/if} /> 关闭</label>		
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 control-label">腾讯地图key</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="mapkey" class="form-control" value="{$settings['mapkey']}"/>
+							<span class="help-block" style="color:red;">用于小区定位 <a href="http://lbs.qq.com/console/key.html" target="_blank" style="color:green;">点击申请key,申请请选择浏览器类型</a></span>
+						</div>
+					</div>
+
+					{if $_W["account"]["type_name"] == "公众号"}
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">下单页（代理和自发）预加载图片</label>
+						<div class="col-sm-9 col-xs-12">
+							{php echo tpl_form_field_image('loadthumb', $settings['loadthumb'], '', array('extras' => array('text' => 'readonly')))}
+							<span class="help-block" style="color:red;">仅公众号使用</span>
+						</div>
+					</div>
+					{/if}					
+
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">团长提现</label>
+						<div class="col-sm-5 col-xs-12">
+							<div class="input-group">
+								<span class="input-group-addon">确认收货（核销）后</span>
+								<input class="form-control" name="dltxhour" value="{$settings['dltxhour']}" type="text">
+								<span class="input-group-addon">小时可提现</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">社群社区团退款</label>
+						<div class="col-sm-5 col-xs-12">
+							<div class="input-group">
+								<span class="input-group-addon">超过活动结束前</span>
+								<input class="form-control" name="dltkhour" value="{$settings['dltkhour']}" type="text">
+								<span class="input-group-addon">小时禁止退款</span>
+							</div>
+						</div>
+					</div>
+				
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">自发用户提现</label>
+						<div class="col-sm-5 col-xs-12">
+							<div class="input-group">
+								<span class="input-group-addon">确认收货（核销）后</span>
+								<input class="form-control" name="zftxhour" value="{$settings['zftxhour']}" type="text">
+								<span class="input-group-addon">小时可提现</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">自发团确认收货</label>
+						<div class="col-sm-5 col-xs-12">
+							<div class="input-group">
+								<span class="input-group-addon">发货后</span>
+								<input class="form-control" name="qrshhour1" value="{$settings['qrshhour1']}" type="text">
+								<span class="input-group-addon">小时，接龙所有者可主动完成收货</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">社群社区团确认收货</label>
+						<div class="col-sm-5 col-xs-12">
+							<div class="input-group">
+								<span class="input-group-addon">发货后</span>
+								<input class="form-control" name="qrshhour2" value="{$settings['qrshhour2']}" type="text">
+								<span class="input-group-addon">小时，团长可主动完成收货</span>
+							</div>
+						</div>
+					</div>
+					
+					{if $_W["account"]["type_name"] == "公众号"}
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">关键词回复获得最新接龙信息，未获得数据情况下自动回复内容</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="dodatahf" class="form-control" value="{$settings['dodatahf']}"/>
+							<span class="help-block" style="color:red;">*仅公众号端使用</span>
+						</div>
+					</div>
+					{/if}
+				</div>
+			</div>
+			
+			<div role="tabpanel" class="tab-pane panel panel-default" id="tuanzhang">
+				<div class="panel-heading">团长申请设置</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">团长申请</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline"><input type="radio" name="agentreg" value="1" {if $settings['agentreg'] == 1}checked="true"{/if} /> 开启</label>
+							&nbsp;&nbsp;&nbsp;
+							<label class="radio-inline"><input type="radio" name="agentreg" value="0" {if $settings['agentreg'] == 0}checked="true"{/if} /> 关闭</label>							
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">团长入驻费</label>
+						<div class="col-sm-3 col-xs-12">
+							<div class="input-group">
+								<input class="form-control" name="tzmoney" value="{$settings['tzmoney']}" type="text">
+								<span class="input-group-addon">元</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">团长邀请通道</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline"><input type="radio" name="agentyaoqing" value="1" {if $settings['agentyaoqing'] == 1}checked="true"{/if} /> 开启</label>
+							&nbsp;&nbsp;&nbsp;
+							<label class="radio-inline"><input type="radio" name="agentyaoqing" value="0" {if $settings['agentyaoqing'] == 0}checked="true"{/if} /> 关闭</label>							
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">团长推荐佣金</label>
+						<div class="col-sm-3 col-xs-12">
+							<div class="input-group">
+								<input class="form-control" name="tzyongjin" value="{$settings['tzyongjin']}" type="text">
+								<span class="input-group-addon">元</span>
+							</div>
+							<span class="help-block" style="color:red;">*例如A团长推荐B用户成为团长，可得佣金</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">团长申请海报</label>
+						<div class="col-sm-9 col-xs-12">
+							{php echo tpl_form_field_image('agentthumb', $settings['agentthumb'], '', array('extras' => array('text' => 'readonly')))}
+							<span class="help-block" style="color:red;">*将在团长申请页面展示</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div role="tabpanel" class="tab-pane panel panel-default" id="share">
+				<div class="panel-heading">首页自定义分享</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">首页标题</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="indextitle" class="form-control" value="{$settings['indextitle']}"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">首页分享标题</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="sharetitle" class="form-control" value="{$settings['sharetitle']}"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">首页分享图片</label>
+						<div class="col-sm-9 col-xs-12">
+							{php echo tpl_form_field_image('sharethumb', $settings['sharethumb'], '', array('extras' => array('text' => 'readonly')))}
+							<span class="help-block" style="color:red;">推荐尺寸200*200</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">首页分享描述</label>
+						<div class="col-sm-7 col-xs-12">
+							<textarea class="form-control" style="height:100px;" name="sharedes">{$settings['sharedes']}</textarea>
+						</div>
+					</div>
+						
+				</div>
+			</div>
+			<div role="tabpanel" class="tab-pane panel panel-default" id="tixian">
+				<div class="panel-heading">提现退款设置</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">微信支付商户号(MchId)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="mchid" class="form-control" value="{$settings['mchid']}"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">应用标识(appId)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="appid" class="form-control" value="{$settings['appid']}"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户支付密钥(API密钥)</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="key" class="form-control" value="{$settings['key']}"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">服务器IP</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="ip" class="form-control" value="{$settings['ip']}"/>
+						</div>
+					</div>
+					
+					<div class="alert alert-danger" role="alert">
+						为了安全起见取消了原本上传证书的功能，请把3个证书上传至模块根目录下（即addons/cy163_salesjl/{$_W['uniacid']}/目录下面），3个文件名称为apiclient_cert.pem、apiclient_key.pem、rootca.pem（非使用微信红包功能时，可不传rootca.pem文件）。
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 control-label">提现方式</label>
+						<div class="col-sm-9 col-xs-12">
+							<label for="txtype1" class="radio-inline"><input name="txtype" value="0" id="txtype1" {if $settings['txtype'] == 0}checked="true"{/if} type="radio"> 微信零钱、支付宝</label>
+							&nbsp;&nbsp;&nbsp;
+							<label for="txtype2" class="radio-inline"><input name="txtype" value="1" id="txtype2" {if $settings['txtype'] == 1}checked="true"{/if} type="radio"> 微信零钱</label>
+							&nbsp;&nbsp;&nbsp;
+							<label for="txtype3" class="radio-inline"><input name="txtype" value="2" id="txtype3" {if $settings['txtype'] == 2}checked="true"{/if} type="radio"> 支付宝</label>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 control-label">提现免审条件</label>
+						<div class="col-sm-5 col-xs-12">
+							<div class="input-group">
+								<span class="input-group-addon">提现小于</span>
+								<input class="form-control" name="msmoney" value="{$settings['msmoney']}" type="text">
+								<span class="input-group-addon">元可免审</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">提现条件</label>
+						<div class="col-sm-5 col-xs-12">
+							<div class="input-group">
+								<span class="input-group-addon">大于</span>
+								<input class="form-control" name="present_money" value="{$settings['present_money']}" type="text">
+								<span class="input-group-addon">元，小于</span>
+								<input class="form-control" name="present_money_end" value="{$settings['present_money_end']}" type="text">
+								<span class="input-group-addon">元可提现</span>
+							</div>
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">提现费率（团长）</label>
+						<div class="col-sm-4 col-xs-12">
+							<div class="input-group">
+								<input class="form-control" name="txdisaccount" value="{$settings['txdisaccount']}" type="text">
+								<span class="input-group-addon">%</span>
+							</div>
+							<span class="help-block"><strong style="color:red;">每次提现扣除的服务费（%），进入平台账户。例：填写1.00，即为1%</strong></span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">提现费率（用户）</label>
+						<div class="col-sm-4 col-xs-12">
+							<div class="input-group">
+								<input class="form-control" name="usertxdisaccount" value="{$settings['usertxdisaccount']}" type="text">
+								<span class="input-group-addon">%</span>
+							</div>
+							<span class="help-block"><strong style="color:red;">每次提现扣除的服务费（%），进入平台账户。例：填写1.00，即为1%</strong></span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">退款加库存</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline"><input type="radio" name="refundstock" value="1" {if $settings['refundstock'] == 1}checked="true"{/if} /> 开启</label>
+							&nbsp;&nbsp;&nbsp;
+							<label class="radio-inline"><input type="radio" name="refundstock" value="0" {if $settings['refundstock'] == 0}checked="true"{/if} /> 关闭</label>		
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div role="tabpanel" class="tab-pane panel panel-default" id="tpl">
+				<div class="panel-heading">模板消息设置</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">是否开启模板消息通知</label>
+						<div class="col-sm-9 col-xs-12">
+							<label for="istplon1" class="radio-inline"><input name="istplon" value="1" id="istplon1" {if $settings['istplon'] == 1}checked="true"{/if} type="radio"> 是</label>
+							&nbsp;&nbsp;&nbsp;
+							<label for="istplon2" class="radio-inline"><input name="istplon" value="0" id="istplon2" {if $settings['istplon'] == 0}checked="true"{/if} type="radio"> 否</label>
+							<span class="help-block"></span>
+						</div>
+					</div>
+	
+					<!-- 卖家侧 -->
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">成功下单通知（通知卖方）</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="nt_order_new" class="form-control" value="{$settings['nt_order_new']}"/>
+							<div class="help-block">成功下单通知 OPENTM207018253（小程序：AT0009。选择顺序：订单编号、订单金额、下单时间、地址）</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">订单发货提醒</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="tpl_or_fahuo" value="{$settings['tpl_or_fahuo']}" />
+							<span class="help-block">订单发货提醒 OPENTM200565259 （小程序：AT0007。选择顺序：快递公司、快递单号、订单号、发货时间）</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">团长审核提醒</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="agent_tz" value="{$settings['agent_tz']}" />
+							<span class="help-block">审核结果通知 OPENTM408894858（小程序：AT0146。选择顺序：审核结果、审核时间）</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">活动审核结果通知</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="huodong_tz" value="{$settings['huodong_tz']}" />
+							<span class="help-block">活动审核结果通知 OPENTM200602458（小程序：暂无。）</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">团队成员加入通知</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="rutuan_tz" value="{$settings['rutuan_tz']}" />
+							<span class="help-block">成员加入提醒 OPENTM207685059（小程序：暂无。）</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">到货通知</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="daohuo_tz" class="form-control" value="{$settings['daohuo_tz']}"/>
+							<div class="help-block">到货通知 OPENTM401929935（小程序：暂无。）</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div role="tabpanel" class="tab-pane panel panel-default" id="kuaidi">
+				<div class="panel-heading">快递物流设置</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">快递鸟商户ID</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" name="kdnid" class="form-control" value="{$settings['kdnid']}"/>
+							<div class="help-block">用于获取物流信息，<a href="http://www.kdniao.com/" style="color:#428BCA;" target="_blank">快递鸟接口申请</a></div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">快递鸟API KEY</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="kdnkey" value="{$settings['kdnkey']}" />
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div role="tabpanel" class="tab-pane panel panel-default" id="renzheng">
+				<div class="panel-heading">认证设置</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">个人认证费用</label>
+						<div class="col-sm-3 col-xs-12">
+							<div class="input-group">
+								<input type="text" class="form-control" name="gerenfee" value="{$settings['gerenfee']}" />
+								<span class="input-group-addon">元</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">企业认证费用</label>
+						<div class="col-sm-3 col-xs-12">
+							<div class="input-group">
+								<input type="text" class="form-control" name="qiyefee" value="{$settings['qiyefee']}" />
+								<span class="input-group-addon">元</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">认证页面说明</label>
+						<div class="col-sm-7 col-xs-12">
+							<textarea class="form-control" style="height:100px;" name="renzhengsm">{$settings['renzhengsm']}</textarea>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">是否认证才能提现</label>
+						<div class="col-sm-9 col-xs-12">
+							<label for="rztixian1" class="radio-inline"><input name="rztixian" value="1" id="rztixian1" {if $settings['rztixian'] == 1}checked="true"{/if} type="radio"> 是</label>
+							&nbsp;&nbsp;&nbsp;
+							<label for="rztixian2" class="radio-inline"><input name="rztixian" value="0" id="rztixian2" {if $settings['rztixian'] == 0}checked="true"{/if} type="radio"> 否</label>
+							<span class="help-block"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div role="tabpanel" class="tab-pane panel panel-default" id="tuandui">
+				<div class="panel-heading">团队设置</div>
+				<div class="panel-body">					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">团队页面标题</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="tdtitle" value="{$settings['tdtitle']}" />
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div role="tabpanel" class="tab-pane panel panel-default" id="adv">
+				<div class="panel-heading">广告设置</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告1是否开启</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline"><input name="advon1" value="1" {if $settings['advon1'] == 1}checked="true"{/if} type="radio"> 是</label>
+							&nbsp;&nbsp;&nbsp;
+							<label class="radio-inline"><input name="advon1" value="0" {if $settings['advon1'] == 0}checked="true"{/if} type="radio"> 否</label>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告1</label>
+						<div class="col-sm-9 col-xs-12">
+							{php echo tpl_form_field_image('adv1', $settings['adv1'], '', array('extras' => array('text' => 'readonly')))}
+							<span class="help-block" style="color:#900;">推荐上传750*240大小图片</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告1小程序appid</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="adv1appid" value="{$settings['adv1appid']}" />
+							<span class="help-block" style="color:#900;">跳转的小程序必须和当前小程序被同一个公众号关联，不跳转其他小程序可不填</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告1链接</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="adv1url" value="{$settings['adv1url']}" />
+							<span class="help-block" style="color:#900;">公众号版填链接，小程序版填例如接龙详情（../detail/detail?id=xxxx）xxx代表接龙的id值</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告2是否开启</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline"><input name="advon2" value="1" {if $settings['advon2'] == 1}checked="true"{/if} type="radio"> 是</label>
+							&nbsp;&nbsp;&nbsp;
+							<label class="radio-inline"><input name="advon2" value="0" {if $settings['advon2'] == 0}checked="true"{/if} type="radio"> 否</label>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告2</label>
+						<div class="col-sm-9 col-xs-12">
+							{php echo tpl_form_field_image('adv2', $settings['adv2'], '', array('extras' => array('text' => 'readonly')))}
+							<span class="help-block" style="color:#900;">推荐上传750*240大小图片</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告2小程序appid</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="adv2appid" value="{$settings['adv2appid']}" />
+							<span class="help-block" style="color:#900;">跳转的小程序必须和当前小程序被同一个公众号关联，不跳转其他小程序可不填</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告2链接</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="adv2url" value="{$settings['adv2url']}" />
+							<span class="help-block" style="color:#900;">公众号版填链接，小程序版填例如接龙详情（../detail/detail?id=xxxx）xxx代表接龙的id值</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告3是否开启</label>
+						<div class="col-sm-9 col-xs-12">
+							<label class="radio-inline"><input name="advon3" value="1" {if $settings['advon3'] == 1}checked="true"{/if} type="radio"> 是</label>
+							&nbsp;&nbsp;&nbsp;
+							<label class="radio-inline"><input name="advon3" value="0" {if $settings['advon3'] == 0}checked="true"{/if} type="radio"> 否</label>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告3</label>
+						<div class="col-sm-9 col-xs-12">
+							{php echo tpl_form_field_image('adv3', $settings['adv3'], '', array('extras' => array('text' => 'readonly')))}
+							<span class="help-block" style="color:#900;">推荐上传750*240大小图片</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告3小程序appid</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="adv3appid" value="{$settings['adv3appid']}" />
+							<span class="help-block" style="color:#900;">跳转的小程序必须和当前小程序被同一个公众号关联，不跳转其他小程序可不填</span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">广告3链接</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="adv3url" value="{$settings['adv3url']}" />
+							<span class="help-block" style="color:#900;">公众号版填链接，小程序版填例如接龙详情（../detail/detail?id=xxxx）xxx代表接龙的id值</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div role="tabpanel" class="tab-pane panel panel-default" id="tongbu">
+				<div class="panel-body">
+					<div class="alert alert-danger" role="alert">
+						<h2>同步数据说明</h2>
+						<p>1.同步数据主要用户系统优化对数据的统一处理。</p>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3 col-xs-12">
+							<a href="{php echo $this->createWebUrl('tongbu')}" class="btn btn-success">同步数据</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div role="tabpanel" class="tab-pane panel panel-default" id="haibao">
+				<div class="panel-heading">海报设置</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">团队推广海报背景</label>
+						<div class="col-sm-4 col-xs-12">
+							{php echo tpl_form_field_image('tdthumb', $settings['tdthumb'], '', array('extras' => array('text' => 'readonly')))}
+							<span class="help-block" style="color:red;">推荐尺寸640*1008(二维码大小：180*180)</span>
+						</div>
+						<div class="col-sm-3 col-xs-12">								
+							<div class="input-group">
+								<span class="input-group-addon">二维码距离左</span>
+								<input type="text" name="tdleft" class="form-control" value="{$settings['tdleft']}" />
+							</div>
+						</div>
+						<div class="col-sm-3 col-xs-12">								
+							<div class="input-group">
+								<span class="input-group-addon">二维码距离顶</span>
+								<input type="text" name="tdbottom" class="form-control" value="{$settings['tdbottom']}" />
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">社区团购商品海报背景</label>
+						<div class="col-sm-10 col-xs-12">
+							{php echo tpl_form_field_image('goodsthumb', $settings['goodsthumb'], '', array('extras' => array('text' => 'readonly')))}
+							<span class="help-block" style="color:red;">尺寸750*1334，不上传将采用默认背景案例，<a style="color:#428bca;" target="_blank" href="../addons/cy163_salesjl/static/goodsbg.jpg">查看背景案例</a></span>
+						</div>
+					</div>
+					
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-2 control-label">社区团购首页海报背景</label>
+						<div class="col-sm-2 col-xs-12">
+							<label class="radio-inline"><input name="indexhbstyle" value="0" {if $settings['indexhbstyle'] == 0}checked="true"{/if} type="radio"> 背景1</label>
+						</div>
+						<div class="col-sm-2 col-xs-12">
+							<label class="radio-inline"><input name="indexhbstyle" value="1" {if $settings['indexhbstyle'] == 1}checked="true"{/if} type="radio"> 背景2</label>
+						</div>
+						<div class="col-sm-2 col-xs-12">
+							<label class="radio-inline"><input name="indexhbstyle" value="2" {if $settings['indexhbstyle'] == 2}checked="true"{/if} type="radio"> 背景3</label>
+						</div>
+						<div class="col-sm-2 col-xs-12">
+							<label class="radio-inline"><input name="indexhbstyle" value="3" {if $settings['indexhbstyle'] == 3}checked="true"{/if} type="radio"> 自定义</label>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-2 control-label"></label>
+						<div class="col-sm-2 col-xs-12">
+							<img src="../addons/cy163_salesjl/static/indexbg.png" style="max-width:100%;" />
+						</div>
+						<div class="col-sm-2 col-xs-12">
+							<img src="../addons/cy163_salesjl/static/indexbg2.png" style="max-width:100%;" />
+						</div>
+						<div class="col-sm-2 col-xs-12">
+							<img src="../addons/cy163_salesjl/static/indexbg3.png" style="max-width:100%;" />
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">社区团购首页海报自定义背景</label>
+						<div class="col-sm-10 col-xs-12">
+							{php echo tpl_form_field_image('indexthumb', $settings['indexthumb'], '', array('extras' => array('text' => 'readonly')))}
+							<span class="help-block" style="color:red;">尺寸750*1334</span>
+						</div>
+					</div>
+										
+			
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 control-label"></label>
+						<div class="col-sm-3 col-xs-12">
+							<a href="{php echo $this->createWebUrl('qkhaibao')}" onclick="return confirm('此操作不可恢复，确认吗？');return false;" class="btn btn-danger">清空海报</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div role="tabpanel" class="tab-pane panel panel-default" id="abouts">
+				<div class="panel-heading">关于我们</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">头像</label>
+						<div class="col-sm-9 col-xs-12">
+							{php echo tpl_form_field_image('contactthumb', $settings['contactthumb'], '', array('extras' => array('text' => 'readonly')))}
+							<span class="help-block" style="color:#900;">*关于我们页面顶部的头像</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">名称</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="contactname" value="{$settings['contactname']}" />
+							<span class="help-block" style="color:#900;">*关于我们页面项目名称</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">地址</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="contactaddress" value="{$settings['contactaddress']}" />
+							<span class="help-block" style="color:#900;">*关于我们页面地址</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">联系电话</label>
+						<div class="col-sm-9 col-xs-12">
+							<input type="text" class="form-control" name="contactphone" value="{$settings['contactphone']}" />
+							<span class="help-block" style="color:#900;">*关于我们页面联系电话</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-3 col-md-2 control-label">公司简介</label>
+						<div class="col-sm-7 col-xs-12">
+							<textarea class="form-control" style="height:100px;" name="jianjie">{$settings['jianjie']}</textarea>
+							<span class="help-block" style="color:#900;">*关于我们页面公司简介</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group col-sm-12">
+			<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>	
+</div>
+{template 'common/footer'}
