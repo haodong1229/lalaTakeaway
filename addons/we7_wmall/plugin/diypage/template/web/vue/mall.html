@@ -1,0 +1,144 @@
+{itemplate 'public/header'}
+<link href="../addons/we7_wmall/plugin/diypage/static/css/diy.css" rel="stylesheet" type="text/css"/>
+{if $op == 'menu'}
+<div class="page clearfix">
+	<form class="form-horizontal form form-validate" id="form1" action="" method="post" enctype="multipart/form-data">
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">外卖模块</label>
+			<div class="col-sm-9 col-xs-12">
+				<div class="input-group">
+					<div class="input-group-addon">选择</div>
+					<select name="menu[takeout]" class="form-control">
+						<option value="0" {$config_menu['takeout'] == 0}>系统默认</option>
+						{loop $menus $menu}
+							<option value="{$menu['id']}" {if $menu['id'] == $config_menu['takeout']}selected{/if}>{$menu['name']}</option>
+						{/loop}
+					</select>
+				</div>
+			</div>
+		</div>
+		{if check_plugin_perm('errander')}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">跑腿模块</label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						<div class="input-group-addon">选择</div>
+						<select name="menu[errander]" class="form-control">
+							<option value="0" {$config_menu['errander'] == 0}>系统默认</option>
+							{loop $menus $menu}
+							<option value="{$menu['id']}" {if $menu['id'] == $config_menu['errander']}selected{/if}>{$menu['name']}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+			</div>
+		{/if}
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">下单有礼</label>
+			<div class="col-sm-9 col-xs-12">
+				<div class="input-group">
+					<div class="input-group-addon">选择</div>
+					<select name="menu[ordergrant]" class="form-control">
+						<option value="0" {$config_menu['ordergrant'] == 0}>系统默认</option>
+						{loop $menus $menu}
+							<option value="{$menu['id']}" {if $menu['id'] == $config_menu['ordergrant']}selected{/if}>{$menu['name']}</option>
+						{/loop}
+					</select>
+				</div>
+			</div>
+		</div>
+		{if check_plugin_perm('gohome')}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">生活圈首页</label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						<div class="input-group-addon">选择</div>
+						<select name="menu[gohome]" class="form-control">
+							<option value="0" {$config_menu['gohome'] == 0}>系统默认</option>
+							{loop $menus $menu}
+							<option value="{$menu['id']}" {if $menu['id'] == $config_menu['gohome']}selected{/if}>{$menu['name']}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">同城首页</label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						<div class="input-group-addon">选择</div>
+						<select name="menu[tongcheng]" class="form-control">
+							<option value="0" {$config_menu['tongcheng'] == 0}>系统默认</option>
+							{loop $menus $menu}
+							<option value="{$menu['id']}" {if $menu['id'] == $config_menu['tongcheng']}selected{/if}>{$menu['name']}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">好店首页</label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						<div class="input-group-addon">选择</div>
+						<select name="menu[haodian]" class="form-control">
+							<option value="0" {$config_menu['haodian'] == 0}>系统默认</option>
+							{loop $menus $menu}
+							<option value="{$menu['id']}" {if $menu['id'] == $config_menu['haodian']}selected{/if}>{$menu['name']}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">拼团首页</label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						<div class="input-group-addon">选择</div>
+						<select name="menu[pintuan]" class="form-control">
+							<option value="0" {$config_menu['pintuan'] == 0}>系统默认</option>
+							{loop $menus $menu}
+							<option value="{$menu['id']}" {if $menu['id'] == $config_menu['pintuan']}selected{/if}>{$menu['name']}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">抢购首页</label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						<div class="input-group-addon">选择</div>
+						<select name="menu[seckill]" class="form-control">
+							<option value="0" {$config_menu['seckill'] == 0}>系统默认</option>
+							{loop $menus $menu}
+							<option value="{$menu['id']}" {if $menu['id'] == $config_menu['seckill']}selected{/if}>{$menu['name']}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">砍价首页</label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						<div class="input-group-addon">选择</div>
+						<select name="menu[kanjia]" class="form-control">
+							<option value="0" {$config_menu['kanjia'] == 0}>系统默认</option>
+							{loop $menus $menu}
+							<option value="{$menu['id']}" {if $menu['id'] == $config_menu['kanjia']}selected{/if}>{$menu['name']}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+			</div>
+		{/if}
+		<div class="form-group">
+			<div class="col-sm-9 col-xs-12">
+				<input type="submit" value="提交" class="btn btn-primary">
+			</div>
+		</div>
+	</form>
+</div>
+{/if}
+{itemplate 'public/footer'}
