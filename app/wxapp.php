@@ -1,207 +1,321 @@
-<?php
+<?php 
+define("IN_MOBILE", true);
+require("../framework/bootstrap.inc.php");
+load()->app("common");
+load()->app("template");
+load()->model("mc");
+load()->model("app");
+$_W["uniacid"] = intval($_GPC["i"]);
+if( empty($_W["uniacid"]) ) 
+{
+    $_W["uniacid"] = intval($_GPC["weid"]);
+}
 
-//http://www.weixin2015.cn
-//QQ:2058430070
-//微猫源码
+if( empty($_W["uniacid"]) ) 
+{
+    message(error(-1, "公众号uniacid为空 "), "", "ajax");
+}
 
-define('IN_MOBILE', true);
-require '../framework/bootstrap.inc.php';
-load()->app('common');
-load()->app('template');
-load()->model('mc');
-load()->model('app');
-$_W['uniacid'] = intval($_GPC['i']);
-if (empty($_W['uniacid'])) 
+$_W["account"] = uni_fetch($_W["uniacid"]);
+$_W["uniaccount"] = $_W["account"];
+if( empty($_W["uniaccount"]) ) 
 {
-	$_W['uniacid'] = intval($_GPC['weid']);
+    message(error(-1, "公众号不存在 "), "", "ajax");
 }
-$_W['uniaccount'] = $_W['account'] = uni_fetch($_W['uniacid']);
-if (empty($_W['uniaccount'])) 
+
+$_W["acid"] = $_W["uniaccount"]["acid"];
+$isdel_account = pdo_get("account", array( "isdeleted" => 1, "acid" => $_W["acid"] ));
+if( !empty($isdel_account) ) 
 {
-	header('HTTP/1.1 404 Not Found');
-	header('status: 404 Not Found');
-	exit();
+    message(error(-1, "指定公众号已被删除 "), "", "ajax");
 }
-$_W['acid'] = $_W['uniaccount']['acid'];
-$isdel_account = pdo_get('account', array('isdeleted' => 1, 'acid' => $_W['acid']));
-if (!(empty($isdel_account))) 
+
+$w = (trim($_GPC["w"]) ? trim($_GPC["w"]) : "member");
+if( $w == "member" ) 
 {
-	exit('指定公众号已被删除');
+    $_W["session_id"] = "";
+    if( isset($_GPC["istate"]) && !empty($_GPC["istate"]) ) 
+    {
+        $_W["session_id"] = trim($_GPC["istate"]);
+        $_W["itoken"] = trim($_GPC["istate"]);
+    }
+    else
+    {
+        if( isset($_GPC["state"]) && !empty($_GPC["state"]) && strexists($_GPC["state"], "we7sid-") ) 
+        {
+            $pieces = explode("-", $_GPC["state"]);
+            $_W["session_id"] = $pieces[1];
+            unset($pieces);
+        }
+
+    }
+
+    if( empty($_W["session_id"]) ) 
+    {
+        $_W["session_id"] = $_COOKIE[session_name()];
+    }
+
+    if( empty($_W["session_id"]) ) 
+    {
+        $_W["session_id"] = (string) $_W["uniacid"] . "-" . random(20);
+        $_W["session_id"] = md5($_W["session_id"]);
+        setcookie(session_name(), $_W["session_id"], 0, "/");
+    }
+
+    session_id($_W["session_id"]);
+    load()->classs("wesession");
+    WeSession::start($_W["uniacid"], CLIENT_IP, 864000);
+    if( !empty($_W["openid"]) ) 
+    {
+        $_SESSION["openid"] = $_W["openid"];
+    }
+
+    if( !empty($_GPC["j"]) ) 
+    {
+        $acid = intval($_GPC["j"]);
+        $_W["account"] = account_fetch($acid);
+        if( is_error($_W["account"]) ) 
+        {
+            $_W["account"] = account_fetch($_W["acid"]);
+        }
+        else
+        {
+            $_W["acid"] = $acid;
+        }
+
+        $_SESSION["__acid"] = $_W["acid"];
+        $_SESSION["__uniacid"] = $_W["uniacid"];
+    }
+
+    if( !empty($_SESSION["__acid"]) && $_SESSION["__uniacid"] == $_W["uniacid"] ) 
+    {
+        $_W["acid"] = intval($_SESSION["__acid"]);
+        $_W["account"] = account_fetch($_W["acid"]);
+    }
+
+    if( !empty($_SESSION["acid"]) && $_W["acid"] != $_SESSION["acid"] || !empty($_SESSION["uniacid"]) && $_W["uniacid"] != $_SESSION["uniacid"] ) 
+    {
+        $keys = array_keys($_SESSION);
+        foreach( $keys as $key ) 
+        {
+            unset($_SESSION[$key]);
+        }
+        unset($keys);
+        unset($key);
+    }
+
+    $_SESSION["acid"] = $_W["acid"];
+    $_SESSION["uniacid"] = $_W["uniacid"];
+    if( !empty($_SESSION["openid"]) ) 
+    {
+        $_W["openid"] = $_SESSION["openid"];
+        $_W["unionid"] = $_SESSION["unionid"];
+        $_W["fans"] = mc_fansinfo($_W["openid"]);
+        $_W["fans"]["openid"] = $_W["openid"];
+        $_W["fans"]["from_user"] = $_W["fans"]["openid"];
+        if( empty($_W["unionid"]) ) 
+        {
+            $_W["unionid"] = $_W["fans"]["unionid"];
+        }
+
+    }
+
+    if( empty($_W["openid"]) && !empty($_SESSION["oauth_openid"]) ) 
+    {
+        $_W["openid"] = $_SESSION["oauth_openid"];
+        $_W["fans"] = array( "openid" => $_SESSION["oauth_openid"], "from_user" => $_SESSION["oauth_openid"], "follow" => 0 );
+    }
+
+    if( !empty($_W["openid"]) && $_GPC["from"] == "wxapp" ) 
+    {
+        $_W["openid_wxapp"] = $_W["openid"];
+    }
+
 }
-$_W['session_id'] = '';
-if (isset($_GPC['state']) && !(empty($_GPC['state'])) && strexists($_GPC['state'], 'we7sid-')) 
+
+if( !function_exists("uni_setting_load") ) 
 {
-	$pieces = explode('-', $_GPC['state']);
-	$_W['session_id'] = $pieces[1];
-	unset($pieces);
-}
-if (empty($_W['session_id'])) 
+function uni_setting_load($name = "", $uniacid = 0)
 {
-	$_W['session_id'] = $_COOKIE[session_name()];
+    global $_W;
+    $uniacid = (empty($uniacid) ? $_W["uniacid"] : $uniacid);
+    $cachekey = "unisetting:" . $uniacid;
+    $unisetting = cache_load($cachekey);
+    if( empty($unisetting) ) 
+    {
+        $unisetting = pdo_get("uni_settings", array( "uniacid" => $uniacid ));
+        if( !empty($unisetting) ) 
+        {
+            $serialize = array( "site_info", "stat", "oauth", "passport", "uc", "notify", "creditnames", "default_message", "creditbehaviors", "payment", "recharge", "tplnotice", "mcplugin", "statistics", "bind_domain" );
+            foreach( $unisetting as $key => &$row ) 
+            {
+                if( in_array($key, $serialize) && !empty($row) ) 
+                {
+                    $row = (array) iunserializer($row);
+                }
+
+            }
+        }
+        else
+        {
+            $unisetting = array(  );
+        }
+
+        cache_write($cachekey, $unisetting);
+    }
+
+    if( empty($unisetting) ) 
+    {
+        return array(  );
+    }
+
+    if( empty($name) ) 
+    {
+        return $unisetting;
+    }
+
+    if( !is_array($name) ) 
+    {
+        $name = array( $name );
+    }
+
+    return array_elements($name, $unisetting);
 }
-if (empty($_W['session_id'])) 
-{
-	$_W['session_id'] = $_W['uniacid'] . '-' . random(20);
-	$_W['session_id'] = md5($_W['session_id']);
-	setcookie(session_name(), $_W['session_id']);
+
 }
-session_id($_W['session_id']);
-load()->classs('wesession');
-WeSession::start($_W['uniacid'], CLIENT_IP);
-if (!(empty($_GPC['j']))) 
-{
-	$acid = intval($_GPC['j']);
-	$_W['account'] = account_fetch($acid);
-	if (is_error($_W['account'])) 
-	{
-		$_W['account'] = account_fetch($_W['acid']);
-	}
-	else 
-	{
-		$_W['acid'] = $acid;
-	}
-	$_SESSION['__acid'] = $_W['acid'];
-	$_SESSION['__uniacid'] = $_W['uniacid'];
-}
-if (!(empty($_SESSION['__acid'])) && ($_SESSION['__uniacid'] == $_W['uniacid'])) 
-{
-	$_W['acid'] = intval($_SESSION['__acid']);
-	$_W['account'] = account_fetch($_W['acid']);
-}
-if ((!(empty($_SESSION['acid'])) && ($_W['acid'] != $_SESSION['acid'])) || (!(empty($_SESSION['uniacid'])) && ($_W['uniacid'] != $_SESSION['uniacid']))) 
-{
-	$keys = array_keys($_SESSION);
-	foreach ($keys as $key ) 
-	{
-		unset($_SESSION[$key]);
-	}
-	unset($keys, $key);
-}
-$_SESSION['acid'] = $_W['acid'];
-$_SESSION['uniacid'] = $_W['uniacid'];
-if (!(empty($_SESSION['openid']))) 
-{
-	$_W['openid'] = $_SESSION['openid'];
-	$_W['unionid'] = $_SESSION['unionid'];
-	$_W['fans'] = mc_fansinfo($_W['openid']);
-	$_W['fans']['from_user'] = $_W['fans']['openid'] = $_W['openid'];
-}
-if (!(empty($_SESSION['uid'])) || (!(empty($_W['fans'])) && !(empty($_W['fans']['uid'])))) 
-{
-	$uid = intval($_SESSION['uid']);
-	if (empty($uid)) 
-	{
-		$uid = $_W['fans']['uid'];
-	}
-	_mc_login(array('uid' => $uid));
-	unset($uid);
-}
-if (empty($_W['openid']) && !(empty($_SESSION['oauth_openid']))) 
-{
-	$_W['openid'] = $_SESSION['oauth_openid'];
-	$_W['fans'] = array('openid' => $_SESSION['oauth_openid'], 'from_user' => $_SESSION['oauth_openid'], 'follow' => 0);
-}
+
 $unisetting = uni_setting_load();
-if (!(empty($unisetting['oauth']['account']))) 
+if( !function_exists("uni_permission") ) 
 {
-	$oauth = account_fetch($unisetting['oauth']['account']);
-	if (!(empty($oauth)) && ($_W['account']['level'] <= $oauth['level'])) 
-	{
-		$_W['oauth_account'] = $_W['account']['oauth'] = array('key' => $oauth['key'], 'secret' => $oauth['secret'], 'acid' => $oauth['acid'], 'type' => $oauth['type'], 'level' => $oauth['level']);
-		unset($oauth);
-	}
-	else 
-	{
-		$_W['oauth_account'] = $_W['account']['oauth'] = array('key' => $_W['account']['key'], 'secret' => $_W['account']['secret'], 'acid' => $_W['account']['acid'], 'type' => $_W['account']['type'], 'level' => $_W['account']['level']);
-	}
-}
-else 
+function uni_permission($uid = 0, $uniacid = 0)
 {
-	$_W['oauth_account'] = $_W['account']['oauth'] = array('key' => $_W['account']['key'], 'secret' => $_W['account']['secret'], 'acid' => $_W['account']['acid'], 'type' => $_W['account']['type'], 'level' => $_W['account']['level']);
+    global $_W;
+    $uid = (empty($uid) ? $_W["uid"] : intval($uid));
+    $uniacid = (empty($uniacid) ? $_W["uniacid"] : intval($uniacid));
+    $founders = explode(",", $_W["config"]["setting"]["founder"]);
+    if( in_array($uid, $founders) ) 
+    {
+        return "founder";
+    }
+
+    $sql = "SELECT `role` FROM " . tablename("uni_account_users") . " WHERE `uid`=:uid AND `uniacid`=:uniacid";
+    $pars = array(  );
+    $pars[":uid"] = $uid;
+    $pars[":uniacid"] = $uniacid;
+    $role = pdo_fetchcolumn($sql, $pars);
+    if( empty($role) ) 
+    {
+        return false;
+    }
+
+    return (in_array($role, array( "manager", "owner" )) ? "manager" : "operator");
 }
-$_W['account']['groupid'] = $_W['uniaccount']['groupid'];
-$_W['account']['qrcode'] = tomedia('qrcode_' . $_W['acid'] . '.jpg') . '?time=' . $_W['timestamp'];
-$_W['account']['avatar'] = tomedia('headimg_' . $_W['acid'] . '.jpg') . '?time=' . $_W['timestamp'];
-$_W['attachurl'] = $_W['attachurl_local'] = $_W['siteroot'] . $_W['config']['upload']['attachdir'] . '/';
-if (!(empty($_W['setting']['remote'][$_W['uniacid']]['type']))) 
+
+}
+
+$_W["account"]["groupid"] = $_W["uniaccount"]["groupid"];
+$_W["account"]["qrcode"] = tomedia("qrcode_" . $_W["acid"] . ".jpg") . "?time=" . $_W["timestamp"];
+$_W["account"]["avatar"] = tomedia("headimg_" . $_W["acid"] . ".jpg") . "?time=" . $_W["timestamp"];
+$_W["attachurl_local"] = $_W["siteroot"] . $_W["config"]["upload"]["attachdir"] . "/";
+$_W["attachurl"] = $_W["attachurl_local"];
+if( !empty($_W["setting"]["remote"][$_W["uniacid"]]["type"]) ) 
 {
-	$_W['setting']['remote'] = $_W['setting']['remote'][$_W['uniacid']];
+    $_W["setting"]["remote"] = $_W["setting"]["remote"][$_W["uniacid"]];
 }
-if (!(empty($_W['setting']['remote']['type']))) 
+
+if( !empty($_W["setting"]["remote"]["type"]) ) 
 {
-	if ($_W['setting']['remote']['type'] == ATTACH_FTP) 
-	{
-		$_W['attachurl'] = $_W['attachurl_remote'] = $_W['setting']['remote']['ftp']['url'] . '/';
-	}
-	else if ($_W['setting']['remote']['type'] == ATTACH_OSS) 
-	{
-		$_W['attachurl'] = $_W['attachurl_remote'] = $_W['setting']['remote']['alioss']['url'] . '/';
-	}
-	else if ($_W['setting']['remote']['type'] == ATTACH_QINIU) 
-	{
-		$_W['attachurl'] = $_W['attachurl_remote'] = $_W['setting']['remote']['qiniu']['url'] . '/';
-	}
-	else if ($_W['setting']['remote']['type'] == ATTACH_COS) 
-	{
-		$_W['attachurl'] = $_W['attachurl_remote'] = $_W['setting']['remote']['cos']['url'] . '/';
-	}
+    if( $_W["setting"]["remote"]["type"] == ATTACH_FTP ) 
+    {
+        $_W["attachurl_remote"] = $_W["setting"]["remote"]["ftp"]["url"] . "/";
+        $_W["attachurl"] = $_W["attachurl_remote"];
+    }
+    else
+    {
+        if( $_W["setting"]["remote"]["type"] == ATTACH_OSS ) 
+        {
+            $_W["attachurl_remote"] = $_W["setting"]["remote"]["alioss"]["url"] . "/";
+            $_W["attachurl"] = $_W["attachurl_remote"];
+        }
+        else
+        {
+            if( $_W["setting"]["remote"]["type"] == ATTACH_QINIU ) 
+            {
+                $_W["attachurl_remote"] = $_W["setting"]["remote"]["qiniu"]["url"] . "/";
+                $_W["attachurl"] = $_W["attachurl_remote"];
+            }
+            else
+            {
+                if( $_W["setting"]["remote"]["type"] == ATTACH_COS ) 
+                {
+                    $_W["attachurl_remote"] = $_W["setting"]["remote"]["cos"]["url"] . "/";
+                    $_W["attachurl"] = $_W["attachurl_remote"];
+                }
+
+            }
+
+        }
+
+    }
+
 }
-$acl = array( 'home' => array('default' => 'home'), 'mc' => array('default' => 'home') );
-$controllers = array();
-$handle = opendir(IA_ROOT . '/app/source/');
-if (!(empty($handle))) 
+
+$acl = array( "home" => array( "default" => "home" ), "mc" => array( "default" => "home" ) );
+$controllers = array(  );
+$handle = opendir(IA_ROOT . "/app/source/");
+if( !empty($handle) ) 
 {
-	while ($dir = readdir($handle)) 
-	{
-		if (($dir != '.') && ($dir != '..')) 
-		{
-			$controllers[] = $dir;
-		}
-	}
+    while( $dir = readdir($handle) ) 
+    {
+        if( $dir != "." && $dir != ".." ) 
+        {
+            $controllers[] = $dir;
+        }
+
+    }
 }
-if (!(in_array($controller, $controllers))) 
+
+if( !in_array($controller, $controllers) ) 
 {
-	$controller = 'home';
+    $controller = "home";
 }
-$init = IA_ROOT . '/app/source/' . $controller . '/__init.php';
-if (is_file($init)) 
+
+$init = IA_ROOT . "/app/source/" . $controller . "/__init.php";
+if( is_file($init) ) 
 {
-	require $init;
+    require($init);
 }
-$actions = array();
-$handle = opendir(IA_ROOT . '/app/source/' . $controller);
-if (!(empty($handle))) 
+
+$actions = array(  );
+$handle = opendir(IA_ROOT . "/app/source/" . $controller);
+if( !empty($handle) ) 
 {
-	while ($dir = readdir($handle)) 
-	{
-		if (($dir != '.') && ($dir != '..') && strexists($dir, '.ctrl.php')) 
-		{
-			$dir = str_replace('.ctrl.php', '', $dir);
-			$actions[] = $dir;
-		}
-	}
+    while( $dir = readdir($handle) ) 
+    {
+        if( $dir != "." && $dir != ".." && strexists($dir, ".ctrl.php") ) 
+        {
+            $dir = str_replace(".ctrl.php", "", $dir);
+            $actions[] = $dir;
+        }
+
+    }
 }
-if (empty($actions)) 
+
+if( !in_array($action, $actions) ) 
 {
-	$str = '';
-	if (uni_is_multi_acid()) 
-	{
-		$str = '&j=' . $_W['acid'];
-	}
-	header('location: index.php?i=' . $_W['uniacid'] . $str . '&c=home?refresh');
+    $action = $acl[$controller]["default"];
 }
-if (!(in_array($action, $actions))) 
+
+if( !in_array($action, $actions) ) 
 {
-	$action = $acl[$controller]['default'];
+    $action = $actions[0];
 }
-if (!(in_array($action, $actions))) 
+
+require(_forward($controller, $action));
+function _forward($c, $a)
 {
-	$action = $actions[0];
+    $file = IA_ROOT . "/app/source/" . $c . "/" . $a . ".ctrl.php";
+    return $file;
 }
-require _forward($controller, $action);
-function _forward($c, $a) 
-{
-	$file = IA_ROOT . '/app/source/' . $c . '/' . $a . '.ctrl.php';
-	return $file;
-}
-?>
+
+
