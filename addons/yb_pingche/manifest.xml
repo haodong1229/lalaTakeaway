@@ -1,0 +1,742 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.weixin2015.cn" versionCode="0.6">
+	<application setting="false">
+		<name><![CDATA[滴滴顺风车]]></name>
+		<identifie><![CDATA[yb_pingche]]></identifie>
+		<version><![CDATA[1.1.5]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[拼车系统]]></ability>
+		<description><![CDATA[拼车系统小程序]]></description>
+		<author><![CDATA[微猫源码]]></author>
+		<url><![CDATA[http://www.weixin2015.cn]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+		</handles>
+		<rule embed="false" />
+		<card embed="false" />
+		<supports>
+			<item type="wxapp" />
+		</supports>
+	</platform>
+	<bindings>
+	    <cover>
+	        
+		</cover>
+		<rule>
+		    
+		</rule>
+		<menu>
+			
+		</menu>
+	</bindings>
+	<install><![CDATA[CREATE TABLE `yb_pc_access_token` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `access_token` varchar(400) DEFAULT NULL,
+  `expires_in` int(11) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_ad_click` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ad_img_id` int(11) DEFAULT '0',
+  `m_id` bigint(20) DEFAULT '0',
+  `addtime` datetime DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_ad_info` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `a_id` int(11) DEFAULT '0',
+  `nsort` int(11) DEFAULT '0',
+  `file_path` varchar(255) DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL,
+  `isdel` tinyint(1) DEFAULT '1',
+  `hits` int(11) DEFAULT '0',
+  `nstatus` tinyint(1) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  `nclass` tinyint(1) DEFAULT '0',
+  `xcx_path` varchar(100) DEFAULT NULL,
+  `xcx_param` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_ad_seat` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) DEFAULT NULL,
+  `width` int(11) DEFAULT '0',
+  `height` int(11) DEFAULT '0',
+  `addtime` datetime DEFAULT NULL,
+  `num` int(11) DEFAULT '0',
+  `nstatus` tinyint(1) DEFAULT '1',
+  `file_path` varchar(255) DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  `ntype` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_admin` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) DEFAULT NULL,
+  `password` varchar(32) DEFAULT NULL,
+  `truename` varchar(20) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `reason` varchar(100) DEFAULT NULL,
+  `regtime` datetime DEFAULT NULL,
+  `num` int(11) DEFAULT '0',
+  `loginip` varchar(20) DEFAULT NULL,
+  `logintime` datetime DEFAULT NULL,
+  `headimg` varchar(100) DEFAULT 'logo.png',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_adminlog` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `admin_id` int(11) DEFAULT '0',
+  `logintime` int(11) DEFAULT '0',
+  `loginip` varchar(30) DEFAULT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  `type` tinyint(1) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_area_price` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `p_id` int(11) DEFAULT '0',
+  `allsubid` varchar(2000) DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL,
+  `start_price` float(10,2) DEFAULT '0.00',
+  `sstart_mileage` float(10,2) DEFAULT '0.00',
+  `skm_price` float(10,2) DEFAULT '0.00',
+  `bkm_price` float(10,2) DEFAULT '0.00',
+  `bstart_mileage` float(10,2) DEFAULT '0.00',
+  `nstatus` tinyint(1) DEFAULT '1',
+  `word` varchar(10) DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  `flag` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_auth_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '1',
+  `rules` varchar(200) DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_auth_group_access` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) DEFAULT '0',
+  `group_id` int(11) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_auth_rule` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) DEFAULT NULL,
+  `title` varchar(200) DEFAULT '',
+  `type` tinyint(1) DEFAULT '1',
+  `status` tinyint(1) DEFAULT '1',
+  `pid` int(11) DEFAULT '0',
+  `condition` char(100) DEFAULT NULL,
+  `ico` varchar(20) NOT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_auth_rule_class` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) DEFAULT '',
+  `addtime` datetime DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '1',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_bidding` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `starting_place` varchar(255) DEFAULT NULL,
+  `end_place` varchar(255) DEFAULT NULL,
+  `begin_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL,
+  `flag` tinyint(1) DEFAULT '1',
+  `mobile` varchar(255) DEFAULT NULL,
+  `weixin` varchar(255) DEFAULT NULL,
+  `put_time` int(11) DEFAULT '0',
+  `truename` varchar(255) DEFAULT NULL,
+  `addtime` int(11) DEFAULT '0',
+  `audit` tinyint(1) DEFAULT '1',
+  `overdue` int(11) DEFAULT '0',
+  `reason` varchar(255) DEFAULT NULL,
+  `operate_time` int(11) DEFAULT '0',
+  `m_id` int(11) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  `nstatus` tinyint(1) DEFAULT '0',
+  `b_lnglat` varchar(255) DEFAULT NULL,
+  `e_lnglat` varchar(255) DEFAULT NULL,
+  `lng` varchar(255) DEFAULT NULL,
+  `lat` varchar(255) DEFAULT NULL,
+  `begin_addr` varchar(500) DEFAULT NULL,
+  `end_addr` varchar(500) DEFAULT NULL,
+  `ccc` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_bidding_price` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `daynum` int(11) DEFAULT '0',
+  `price` float DEFAULT '0',
+  `nstatus` tinyint(1) DEFAULT '1',
+  `addtime` datetime DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_car_owner_deposit_log` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `co_id` bigint(20) DEFAULT '0',
+  `deposit` float DEFAULT '0',
+  `addtime` datetime DEFAULT NULL,
+  `ispay` tinyint(1) DEFAULT '1',
+  `transaction_id` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `ordernum` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
+  `isdel` tinyint(1) DEFAULT '0',
+  `mobile` varchar(15) CHARACTER SET utf8 DEFAULT NULL,
+  `overtime` datetime DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  `ntype` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_car_owner_notes` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `note` text CHARACTER SET utf8,
+  `addtime` datetime DEFAULT NULL,
+  `chotline` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `nclass` tinyint(1) DEFAULT '1',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_car_owner_order` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `co_id` bigint(20) DEFAULT '0',
+  `starting_place` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
+  `end_place` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
+  `begin_time` datetime DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL,
+  `nstatus` tinyint(1) DEFAULT '1',
+  `addtime` datetime DEFAULT NULL,
+  `number` int(11) DEFAULT '0',
+  `note` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `money` float DEFAULT '0',
+  `area_name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `isreceipt` tinyint(1) DEFAULT '1',
+  `now_num` int(11) DEFAULT '0',
+  `ordernum` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
+  `ismatching` tinyint(1) DEFAULT '1',
+  `isdel` tinyint(1) DEFAULT '0',
+  `cancel_order` tinyint(1) DEFAULT '0',
+  `iscancel` tinyint(1) DEFAULT '0',
+  `surplus_seat` int(11) NOT NULL DEFAULT '0',
+  `apply` tinyint(1) NOT NULL DEFAULT '0',
+  `is_flag` tinyint(1) DEFAULT '1',
+  `uniacid` int(11) DEFAULT '0',
+  `b_lnglat` varchar(255) DEFAULT NULL,
+  `e_lnglat` varchar(255) DEFAULT NULL,
+  `lng` varchar(255) DEFAULT NULL,
+  `lat` varchar(255) DEFAULT NULL,
+  `begin_addr` varchar(500) DEFAULT NULL,
+  `end_addr` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_car_owner_order_complain` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `m_id` bigint(20) DEFAULT '0',
+  `pid` bigint(20) DEFAULT '0',
+  `picpath` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL COMMENT '添加时间',
+  `nstatus` tinyint(1) DEFAULT '1',
+  `note` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
+  `nclass` tinyint(1) DEFAULT '1',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_car_owner_order_details` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `coo_id` bigint(20) DEFAULT '0',
+  `m_id` bigint(20) DEFAULT '0',
+  `menoy` float DEFAULT '0',
+  `seat_num` int(11) DEFAULT '0',
+  `ntotal` float DEFAULT '0',
+  `ispay` tinyint(1) DEFAULT '1',
+  `addtime` datetime DEFAULT NULL,
+  `cancel_order` tinyint(1) DEFAULT '0',
+  `iscancal` tinyint(1) DEFAULT '0',
+  `isdel` tinyint(1) DEFAULT '0',
+  `istransfer` tinyint(1) DEFAULT '0',
+  `transaction_id` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `transaction_time` datetime DEFAULT NULL,
+  `ordernum` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
+  `isstart` tinyint(1) DEFAULT '1',
+  `redpacked` float DEFAULT '0',
+  `apply` tinyint(1) NOT NULL DEFAULT '0',
+  `num` int(11) NOT NULL,
+  `paytype` tinyint(1) NOT NULL DEFAULT '1',
+  `uniacid` int(11) DEFAULT '0',
+  `coos_id` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_car_owner_order_station` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `coo_id` int(11) DEFAULT '0',
+  `starting_place` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
+  `end_place` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
+  `b_lnglat` varchar(255) DEFAULT NULL,
+  `e_lnglat` varchar(255) DEFAULT NULL,
+  `lng` varchar(255) DEFAULT NULL,
+  `lat` varchar(255) DEFAULT NULL,
+  `begin_addr` varchar(500) DEFAULT NULL,
+  `end_addr` varchar(500) DEFAULT NULL,
+  `money` float DEFAULT '0',
+  `addtime` datetime DEFAULT NULL,
+  `nstatus` tinyint(1) DEFAULT '1',
+  `number` int(11) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  `isreceipt` tinyint(1) DEFAULT '1',
+  `isdel` tinyint(1) DEFAULT '0',
+  `area_name` varchar(100) DEFAULT NULL,
+  `begin_time` datetime DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_car_owner_share` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `m_id` bigint(20) DEFAULT '0',
+  `referee_id` bigint(20) DEFAULT '0',
+  `nstatus` tinyint(1) DEFAULT '0',
+  `share_time` datetime DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL,
+  `isdel` tinyint(1) DEFAULT '1',
+  `reason` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
+  `redpacked` float NOT NULL DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  `ntype` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `auth_on` varchar(25) DEFAULT NULL,
+  `auth_type` varchar(35) DEFAULT NULL,
+  `auth_group` varchar(55) DEFAULT NULL,
+  `auth_group_access` varchar(55) DEFAULT NULL,
+  `auth_rule` varchar(255) DEFAULT NULL,
+  `auth_user` varchar(255) DEFAULT NULL,
+  `nclass` varchar(500) DEFAULT NULL,
+  `templet_id1` varchar(55) DEFAULT NULL,
+  `templet_id2` varchar(55) DEFAULT NULL,
+  `templet_id3` varchar(55) DEFAULT NULL,
+  `member_deposit` float(10,2) DEFAULT '0.00',
+  `member_redpacked` float(10,2) DEFAULT '0.00',
+  `member_share` float(10,2) DEFAULT '0.00',
+  `member_jine` float(10,2) DEFAULT '0.00',
+  `member_taskcount` int(10) DEFAULT '0',
+  `platform_plat_dj_passenger` float(10,2) DEFAULT '0.00',
+  `platform_plat_dj_car_owner` float(10,2) DEFAULT '0.00',
+  `platform_plat_car_owner1` float(10,2) DEFAULT '0.00',
+  `platform_plat_passenger2` float(10,2) DEFAULT '0.00',
+  `platform_platform` float(10,2) DEFAULT '0.00',
+  `platform_car_owner` float(10,2) DEFAULT '0.00',
+  `platform_passenger` float(10,2) DEFAULT '0.00',
+  `platform_platform_dj` float(10,2) DEFAULT '0.00',
+  `platform_cover_charge` float(10,2) DEFAULT '0.00',
+  `uptype` varchar(500) DEFAULT NULL,
+  `pingche_xcx_appid` varchar(255) DEFAULT NULL,
+  `pingche_xcx_secret` varchar(255) DEFAULT NULL,
+  `tmpl_exception_file` varchar(255) DEFAULT NULL,
+  `error_page` varchar(255) DEFAULT NULL,
+  `tmpl_template_suffix` varchar(255) DEFAULT NULL,
+  `default_module` varchar(255) DEFAULT NULL,
+  `module_allow_list` varchar(255) DEFAULT NULL,
+  `module_deny_list` varchar(255) DEFAULT NULL,
+  `ali_sms_product` varchar(255) DEFAULT NULL,
+  `ali_sms_domain` varchar(255) DEFAULT NULL,
+  `ali_sms_region` varchar(255) DEFAULT NULL,
+  `ali_sms_end_point_name` varchar(255) DEFAULT NULL,
+  `ali_sms_key_id` varchar(255) DEFAULT NULL,
+  `ali_sms_key_secret` varchar(255) DEFAULT NULL,
+  `ali_sms_signname` varchar(255) DEFAULT NULL,
+  `ali_sms_templatecode` varchar(255) DEFAULT NULL,
+  `ali_sms_sms2` varchar(255) DEFAULT NULL,
+  `ali_sms_sms3` varchar(255) DEFAULT NULL,
+  `ali_sms_sms4` varchar(255) DEFAULT NULL,
+  `ali_sms_sms5` varchar(255) DEFAULT NULL,
+  `ali_sms_sms6` varchar(255) DEFAULT NULL,
+  `ali_sms_sms7` varchar(255) DEFAULT NULL,
+  `ali_sms_sms8` varchar(255) DEFAULT NULL,
+  `ali_sms_sms9` varchar(255) DEFAULT NULL,
+  `ali_sms_sms10` varchar(255) DEFAULT NULL,
+  `ali_sms_sms11` varchar(255) DEFAULT NULL,
+  `ali_sms_sms12` varchar(255) DEFAULT NULL,
+  `ali_sms_sms13` varchar(255) DEFAULT NULL,
+  `ali_sms_sms14` varchar(255) DEFAULT NULL,
+  `ali_sms_sms15` varchar(255) DEFAULT NULL,
+  `wx_pay_appid` varchar(255) DEFAULT NULL,
+  `wx_pay_mchid` varchar(100) DEFAULT NULL,
+  `wx_pay_secrect_key` varchar(50) DEFAULT NULL,
+  `wx_pay_ip` varchar(20) DEFAULT NULL,
+  `wx_pay_sslcert_path` text,
+  `wx_pay_sslkey_path` text,
+  `uploadaddr_uploadhead` varchar(200) DEFAULT NULL,
+  `uploadaddr_adimg` varchar(200) DEFAULT NULL,
+  `uploadaddr_complain` text,
+  `ht_pay_path_passengertaskpay` text,
+  `ht_pay_path_passengerbuyseatpay` text,
+  `ht_pay_path_carownerrechargepay` text,
+  `copyright` varchar(255) DEFAULT NULL,
+  `is_web` tinyint(1) DEFAULT '1',
+  `is_web_explain` varchar(200) DEFAULT NULL,
+  `kefumobile` varchar(40) DEFAULT NULL,
+  `kefu_time` varchar(100) DEFAULT NULL,
+  `sitename` varchar(100) DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  `start_price` float(10,2) DEFAULT '0.00',
+  `sstart_mileage` float(10,2) DEFAULT '0.00',
+  `skm_price` float(10,2) DEFAULT '0.00',
+  `bkm_price` float(10,2) DEFAULT '0.00',
+  `bstart_mileage` float(10,2) DEFAULT '0.00',
+  `localkey` varchar(100) DEFAULT NULL,
+  `gzh_appid` varchar(100) DEFAULT NULL,
+  `gzh_secret` varchar(50) DEFAULT NULL,
+  `gzh_ywym_status` tinyint(1) DEFAULT '1',
+  `gzh_ywym_filename` varchar(100) DEFAULT NULL,
+  `gzh_ywym_filecontent` varchar(100) DEFAULT NULL,
+  `gzh_wysq_status` tinyint(1) DEFAULT '1',
+  `gzh_wysq_filename` tinyint(1) DEFAULT NULL,
+  `gzh_wysq_filecontent` varchar(50) DEFAULT NULL,
+  `car_owner_share` float(10,2) DEFAULT '0.00',
+  `gzh_token` varchar(100) DEFAULT NULL,
+  `gzh_template1` varchar(100) DEFAULT NULL,
+  `gzh_template2` varchar(100) DEFAULT NULL,
+  `gzh_template3` varchar(100) DEFAULT NULL,
+  `ali_sms_sms16` varchar(30) DEFAULT NULL,
+  `ali_sms_sms17` varchar(30) DEFAULT NULL,
+  `ali_sms_sms18` varchar(30) DEFAULT NULL,
+  `ali_sms_sms19` varchar(30) DEFAULT NULL,
+  `ali_sms_sms20` varchar(50) DEFAULT NULL,
+  `ali_sms_sms21` varchar(50) DEFAULT NULL,
+  `ali_sms_sms22` varchar(100) DEFAULT NULL,
+  `ali_sms_sms23` varchar(100) DEFAULT NULL,
+  `appname` varchar(255) DEFAULT NULL,
+  `addtime` int(11) DEFAULT '0',
+  `max_upload_size` int(11) DEFAULT '0',
+  `oss_access_id` varchar(50) DEFAULT NULL,
+  `oss_access_key` varchar(50) DEFAULT NULL,
+  `oss_endpoint` varchar(100) DEFAULT NULL,
+  `oss_bucket` varchar(100) DEFAULT NULL,
+  `oss_web_site` varchar(50) DEFAULT '',
+  `upload_type` tinyint(1) DEFAULT '0',
+  `qiniu_ak` varchar(255) DEFAULT NULL,
+  `qiniu_sk` varchar(255) DEFAULT NULL,
+  `qiniu_site` varchar(255) DEFAULT NULL,
+  `qiniu_bucket` varchar(255) DEFAULT NULL,
+  `is_autoprice` tinyint(1) DEFAULT '1',
+  `is_ordercanel` tinyint(1) DEFAULT '1',
+  `ordercaneltime` int(11) DEFAULT '0',
+  `piansheng_title` varchar(200) DEFAULT NULL,
+  `piansheng_email` varchar(100) DEFAULT NULL,
+  `piansheng_qq` varchar(100) DEFAULT NULL,
+  `station_num` int(11) DEFAULT '0',
+  `co_awards_status` tinyint(1) DEFAULT '1',
+  `co_awards_type` tinyint(1) DEFAULT '1',
+  `co_awards_value` int(11) DEFAULT '0',
+  `passenger_awards_status` tinyint(1) DEFAULT '1',
+  `passenger_awards_type` tinyint(1) DEFAULT '1',
+  `passenger_awards_value` int(11) DEFAULT '0',
+  `piansheng_content` text,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_fzsm` (
+  `nid` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `content` text,
+  `addtime` datetime DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_gzh_member` (
+  `nid` bigint(11) NOT NULL AUTO_INCREMENT,
+  `openid` varchar(100) DEFAULT NULL,
+  `unionid` varchar(100) DEFAULT NULL,
+  `nickname` varchar(50) DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL,
+  `headimgurl` varchar(1000) DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_invitation` (
+  `nid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderid` bigint(20) DEFAULT '0',
+  `nstatus` tinyint(1) DEFAULT '1',
+  `referee_id` bigint(20) DEFAULT '0',
+  `addtime` datetime DEFAULT NULL,
+  `m_id` bigint(20) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_member` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `mobile` varchar(11) CHARACTER SET utf8 DEFAULT '',
+  `wx_province` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `wx_city` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `wx_country` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `wx_gender` tinyint(1) DEFAULT '1',
+  `wx_nickname` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `wx_headimg` varchar(300) CHARACTER SET utf8 DEFAULT NULL,
+  `openid` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `session_key` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `expires_in` int(11) DEFAULT '0',
+  `regtime` datetime DEFAULT NULL,
+  `deposit` float DEFAULT '0',
+  `account_amount` float DEFAULT '0',
+  `nclass` tinyint(1) DEFAULT '0',
+  `referee_id` bigint(20) DEFAULT '0',
+  `nstatus` tinyint(1) DEFAULT '1',
+  `isfirst` tinyint(1) DEFAULT '0',
+  `session3r` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
+  `num` int(11) DEFAULT '0',
+  `login_time` datetime DEFAULT NULL,
+  `area` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
+  `form_id` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
+  `form_id_expires_in` int(11) DEFAULT '0',
+  `redpacked` float DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  `car_number` varchar(50) DEFAULT NULL,
+  `car_model` varchar(255) DEFAULT NULL,
+  `car_color` varchar(255) DEFAULT NULL,
+  `is_audit` tinyint(1) DEFAULT '0',
+  `driving_license` varchar(100) DEFAULT NULL,
+  `vehicle_license` varchar(100) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `gender` tinyint(1) DEFAULT '0',
+  `wx` varchar(255) DEFAULT NULL,
+  `truename` varchar(255) DEFAULT NULL,
+  `unionid` varchar(100) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_member_binding_mobile` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `mobile` varchar(11) CHARACTER SET utf8 DEFAULT NULL,
+  `smscode` varchar(6) CHARACTER SET utf8 DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL,
+  `nstatus` tinyint(1) DEFAULT '1',
+  `m_id` bigint(20) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_member_complain` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `m_id` bigint(20) DEFAULT '0',
+  `cood_id` bigint(20) DEFAULT '0',
+  `picpath` text,
+  `addtime` datetime DEFAULT NULL,
+  `nstatus` tinyint(1) DEFAULT '1',
+  `note` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
+  `nclass` tinyint(1) DEFAULT '1',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_member_formid` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `form_id` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
+  `form_id_expires_in` int(11) DEFAULT '0',
+  `ntype` tinyint(1) DEFAULT '1',
+  `num` int(11) DEFAULT '0',
+  `addtime` datetime DEFAULT NULL,
+  `m_id` bigint(20) NOT NULL DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_member_log` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `m_id` bigint(20) DEFAULT '0',
+  `ip` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL,
+  `mobile` varchar(15) CHARACTER SET utf8 DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_member_verycode_log` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `mobile` varchar(12) CHARACTER SET utf8 DEFAULT NULL,
+  `smscode` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
+  `totime` int(11) DEFAULT '0',
+  `status` tinyint(1) DEFAULT '1',
+  `addtime` datetime DEFAULT NULL,
+  `veri_time` datetime DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_notice` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `contents` varchar(1000) DEFAULT NULL,
+  `nstatus` tinyint(1) DEFAULT '1',
+  `addtime` datetime DEFAULT NULL,
+  `m_id` bigint(20) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_passenger_order` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `m_id` bigint(20) DEFAULT '0',
+  `starting_place` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `end_place` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `begin_time` datetime DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL,
+  `nstatus` tinyint(1) DEFAULT '1',
+  `ispay` tinyint(1) DEFAULT '1',
+  `addtime` datetime DEFAULT NULL,
+  `isreceipt` tinyint(1) DEFAULT '1',
+  `number` int(11) DEFAULT '0',
+  `note` varchar(300) CHARACTER SET utf8 DEFAULT NULL,
+  `money` float DEFAULT '0',
+  `co_id` bigint(20) DEFAULT '0',
+  `area_name` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
+  `transaction_id` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `ordernum` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
+  `transaction_time` datetime DEFAULT NULL,
+  `istransfer` tinyint(1) DEFAULT '1',
+  `ismatching` tinyint(1) DEFAULT '1',
+  `iscancel` tinyint(1) DEFAULT '0',
+  `isflag` tinyint(1) DEFAULT '0',
+  `isdel1` tinyint(1) DEFAULT '0',
+  `isdel2` tinyint(1) DEFAULT '0',
+  `form_id` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
+  `isstart` tinyint(1) DEFAULT '1',
+  `apply` tinyint(1) DEFAULT '0',
+  `redpacked` float DEFAULT '0',
+  `num` int(11) DEFAULT '0',
+  `paytype` tinyint(1) NOT NULL DEFAULT '1',
+  `uniacid` int(11) DEFAULT '0',
+  `b_lnglat` varchar(255) DEFAULT NULL,
+  `e_lnglat` varchar(255) DEFAULT NULL,
+  `lng` varchar(255) DEFAULT NULL,
+  `lat` varchar(255) DEFAULT NULL,
+  `begin_addr` varchar(500) DEFAULT NULL,
+  `end_addr` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_platform_income` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `money` float DEFAULT '0',
+  `ntype` tinyint(1) DEFAULT '0',
+  `addtime` datetime DEFAULT NULL,
+  `ordernum` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
+  `m_id` bigint(20) DEFAULT '0',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_redpacked_detail` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `m_id` bigint(20) DEFAULT '0',
+  `money` float DEFAULT '0',
+  `ntype` tinyint(1) DEFAULT '0',
+  `addtime` datetime DEFAULT NULL COMMENT '间',
+  `note` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_redpacked_withdraw` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `m_id` bigint(20) DEFAULT '0',
+  `money` float DEFAULT '0',
+  `nstatus` tinyint(1) DEFAULT '1',
+  `addtime` datetime DEFAULT NULL,
+  `transaction_id` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
+  `transaction_time` datetime DEFAULT NULL,
+  `ordernum` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
+  `isdel` tinyint(1) NOT NULL DEFAULT '1',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_revenue_detail` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `money` float DEFAULT '0',
+  `nclass` tinyint(1) DEFAULT '0',
+  `addtime` datetime DEFAULT NULL,
+  `m_id` bigint(20) DEFAULT '0',
+  `seat_num` int(11) DEFAULT '0',
+  `price` float DEFAULT '0',
+  `pid` bigint(20) DEFAULT '0',
+  `isdel` tinyint(1) DEFAULT '0',
+  `ntype` tinyint(1) DEFAULT '1',
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_withdrawals` (
+  `nid` bigint(20) NOT NULL AUTO_INCREMENT,
+  `m_id` bigint(20) DEFAULT '0',
+  `amount_cash` float DEFAULT '0',
+  `nstatus` tinyint(1) DEFAULT '1',
+  `playmoney_time` datetime DEFAULT NULL,
+  `reason` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL,
+  `famount_cash` float DEFAULT '0',
+  `eamount_cash` float DEFAULT '0',
+  `isdel` tinyint(1) DEFAULT '1',
+  `nclass` tinyint(1) DEFAULT '0',
+  `ordernum` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `transaction_id` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
+  `transaction_time` datetime DEFAULT NULL,
+  `uniacid` int(11) DEFAULT '0',
+  PRIMARY KEY (`nid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `yb_pc_wxapp` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT NULL,
+  `create_time` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+]]></install>
+	<uninstall><![CDATA[DROP TABLE IF EXISTS `yb_pc_access_token`;
+DROP TABLE IF EXISTS `yb_pc_ad_click`;
+DROP TABLE IF EXISTS `yb_pc_ad_info`;
+DROP TABLE IF EXISTS `yb_pc_ad_seat`;
+DROP TABLE IF EXISTS `yb_pc_admin`;
+DROP TABLE IF EXISTS `yb_pc_adminlog`;
+DROP TABLE IF EXISTS `yb_pc_area_price`;
+DROP TABLE IF EXISTS `yb_pc_auth_group`;
+DROP TABLE IF EXISTS `yb_pc_auth_group_access`;
+DROP TABLE IF EXISTS `yb_pc_auth_rule`;
+DROP TABLE IF EXISTS `yb_pc_auth_rule_class`;
+DROP TABLE IF EXISTS `yb_pc_bidding`;
+DROP TABLE IF EXISTS `yb_pc_bidding_price`;
+DROP TABLE IF EXISTS `yb_pc_car_owner_deposit_log`;
+DROP TABLE IF EXISTS `yb_pc_car_owner_notes`;
+DROP TABLE IF EXISTS `yb_pc_car_owner_order`;
+DROP TABLE IF EXISTS `yb_pc_car_owner_order_complain`;
+DROP TABLE IF EXISTS `yb_pc_car_owner_order_details`;
+DROP TABLE IF EXISTS `yb_pc_car_owner_order_station`;
+DROP TABLE IF EXISTS `yb_pc_car_owner_share`;
+DROP TABLE IF EXISTS `yb_pc_config`;
+DROP TABLE IF EXISTS `yb_pc_fzsm`;
+DROP TABLE IF EXISTS `yb_pc_gzh_member`;
+DROP TABLE IF EXISTS `yb_pc_invitation`;
+DROP TABLE IF EXISTS `yb_pc_member`;
+DROP TABLE IF EXISTS `yb_pc_member_binding_mobile`;
+DROP TABLE IF EXISTS `yb_pc_member_complain`;
+DROP TABLE IF EXISTS `yb_pc_member_formid`;
+DROP TABLE IF EXISTS `yb_pc_member_log`;
+DROP TABLE IF EXISTS `yb_pc_member_verycode_log`;
+DROP TABLE IF EXISTS `yb_pc_notice`;
+DROP TABLE IF EXISTS `yb_pc_passenger_order`;
+DROP TABLE IF EXISTS `yb_pc_platform_income`;
+DROP TABLE IF EXISTS `yb_pc_redpacked_detail`;
+DROP TABLE IF EXISTS `yb_pc_redpacked_withdraw`;
+DROP TABLE IF EXISTS `yb_pc_revenue_detail`;
+DROP TABLE IF EXISTS `yb_pc_withdrawals`;
+DROP TABLE IF EXISTS `yb_pc_wxapp`;
+]]></uninstall>
+	<upgrade><![CDATA[m_upgrade.php]]></upgrade>
+</manifest>
