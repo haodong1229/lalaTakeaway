@@ -12,7 +12,7 @@ if( is_weixin() || !empty($_GPC["we7_wmall_member_session_" . $_W["uniacid"]]) )
 if( $_W["isajax"] ) 
 {
 	$mobile = (trim($_GPC["mobile"]) ? trim($_GPC["mobile"]) : imessage(error(-1, "请输入手机号"), "", "ajax"));
-	if( $verify == 1 ) 
+	if( $verify == 1 )
 	{
 		$code = trim($_GPC["code"]);
 		$status = icheck_verifycode($mobile, $code);

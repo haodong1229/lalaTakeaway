@@ -121,7 +121,7 @@ require(['tiny'], function(tiny){
 		}
 	});
 
-	$('#search').bind('input', function(){
+	$('#search').bind('input', function(){//输入input框则触发
 		$('#addr-list').addClass('hide');
 		$('#search-end-ls').parent().addClass('search-end-blk');
 		var key = $.trim($(this).val());
@@ -136,7 +136,8 @@ require(['tiny'], function(tiny){
 		});
 	});
 
-	$(document).on('click', '#history-list .js-address-location,#search-end-ls .js-address-location, .sl-addr-block-ls .js-address-location', function(){
+	$(document).on('click', '#history-list .js-address-location,#search-end-ls .js-address-location, .sl-addr-block-ls .js-address-location', function(){//单击搜索的结果触发
+
  		var lat = !$(this).data('lat') ? '' : $(this).data('lat');
 		var lng = !$(this).data('lng') ? '' : $(this).data('lng');
 		var address = $(this).data('address');
