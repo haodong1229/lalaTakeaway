@@ -8,10 +8,10 @@ if( is_weixin() && check_plugin_perm("spread") )
 $ta = (trim($_GPC["ta"]) ? trim($_GPC["ta"]) : "index");
 $config = $_W["we7_wmall"]["config"]["mall"];
 $config_takeout = $_W["we7_wmall"]["config"]["takeout"];
-$_W["page"]["title"] = $config["title"];
-if( $ta == "index" ) 
+$_W["page"]["title"] = '首页';
+if( $ta == "index" )
 {
-	if( $config["version"] == 2 ) 
+	if( $config["version"] == 2 )
 	{
 		$url = imurl("wmall/store/goods", array( "sid" => $config["default_sid"] ));
 		header("location:" . $url);
@@ -20,7 +20,7 @@ if( $ta == "index" )
 	if( !empty($_GPC["__address"]) ) 
 	{
 		$_GPC["__address"] = urldecode($_GPC["__address"]);
-	}
+    }
 	$address_id = intval($_GPC["aid"]);
 	if( 0 < $address_id ) 
 	{

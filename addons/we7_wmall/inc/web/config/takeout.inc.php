@@ -8,26 +8,26 @@ if( $op == "range" )
 	if( $_W["ispost"] ) 
 	{
 		$status = intval($_GPC["status"]);
-		if( $status == 1 ) 
+		if( $status == 1 )
 		{
 			$_GPC["areas"] = str_replace("&nbsp;", "#nbsp;", $_GPC["areas"]);
 			$_GPC["areas"] = json_decode(str_replace("#nbsp;", "&nbsp;", html_entity_decode(urldecode($_GPC["areas"]))), true);
-			foreach( $_GPC["areas"] as $key => &$parent ) 
+			foreach( $_GPC["areas"] as $key => &$parent )
 			{
-				if( !empty($parent) ) 
+				if( !empty($parent) )
 				{
-					foreach( $parent as $key1 => &$child ) 
+					foreach( $parent as $key1 => &$child )
 					{
-						if( !empty($child["areas"]) ) 
+						if( !empty($child["areas"]) )
 						{
-							foreach( $child["areas"] as $key2 => &$val ) 
+							foreach( $child["areas"] as $key2 => &$val )
 							{
-								if( empty($val["path"]) ) 
+								if( empty($val["path"]) )
 								{
 									unset($_GPC["areas"][$key][$key1]["areas"][$key2]);
 								}
 								$path = array( );
-								foreach( $val["path"] as $row ) 
+								foreach( $val["path"] as $row )
 								{
 									$path[] = array( $row["lng"], $row["lat"] );
 								}
@@ -36,7 +36,7 @@ if( $op == "range" )
 								unset($val["isActive"]);
 							}
 						}
-						else 
+						else
 						{
 							unset($_GPC["areas"][$key][$key1]);
 						}
@@ -177,5 +177,9 @@ if( $op == "deliveryer" )
 	}
 	$order = $_config["takeout"]["order"];
 	include(itemplate("config/takeout-deliveryer"));
+}
+if ($op == 'openmap') {
+    //引入谷歌地图
+    include(itemplate("config/googlemap"));
 }
 ?>

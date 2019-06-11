@@ -73,16 +73,39 @@ function tpl_form_field_tiny_wxapp_link($name, $value = "", $options = array( ))
 	$s .= "\r\n\t<div class=\"input-group\">\r\n\t\t<input type=\"text\" value=\"" . $value . "\" name=\"" . $name . "\" class=\"form-control " . $options["css"]["input"] . "\" autocomplete=\"off\">\r\n\t\t<span class=\"input-group-btn\">\r\n\t\t\t<button class=\"btn btn-default " . $options["css"]["btn"] . "\" type=\"button\" onclick=\"showTinyWxappLinkDialog(this);\">选择链接</button>\r\n\t\t</span>\r\n\t</div>\r\n\t";
 	return $s;
 }
+/*
+ * $field  name的字段值
+ * $value  value的默认值
+ * $required  是否是必须输入的, 默认false
+ *
+ * return html字符串
+ */
 function tpl_form_field_tiny_coordinate($field, $value = array( ), $required = false) 
 {
 	global $_W;
 	$s = "";
-	if( !defined("TPL_INIT_TINY_COORDINATE") ) 
+    $url = iurl('config/takeout/openmap');
+	if( !defined("TPL_INIT_TINY_COORDINATE") )
 	{
-		$s .= "<script type=\"text/javascript\">\r\n\t\t\t\tfunction showCoordinate(elm) {\r\n\t\t\t\t\tirequire([\"web/tiny\"], function(tiny){\r\n\t\t\t\t\t\tvar val = {};\r\n\t\t\t\t\t\tval.lng = parseFloat(\$(elm).parent().prev().prev().find(\":text\").val());\r\n\t\t\t\t\t\tval.lat = parseFloat(\$(elm).parent().prev().find(\":text\").val());\r\n\t\t\t\t\t\ttiny.map(val, function(r){\r\n\t\t\t\t\t\t\t\$(elm).parent().prev().prev().find(\":text\").val(r.lng);\r\n\t\t\t\t\t\t\t\$(elm).parent().prev().find(\":text\").val(r.lat);\r\n\t\t\t\t\t\t});\r\n\t\t\t\t\t});\r\n\t\t\t\t}\r\n\t\t\t</script>";
+		$s .= "<script type=\"text/javascript\">
+        function showCoordinate(elm){
+		  layui.use('layer', function(){ //独立版的layer无需执行这一句
+            var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+            layer.open({
+                type: 2,
+                title: \"位置定位\",
+                area: ['80%', '70%'],
+                shade: 0.3,
+                closeBtn: 1,
+                shadeClose: false,
+                content: 'index.php?c=site&a=entry&ctrl=config&ac=takeout&op=openmap&do=web&m=we7_wmall'
+                });
+            });
+        }
+        </script>";
 		define("TPL_INIT_TINY_COORDINATE", true);
 	}
-	$s .= "\r\n\t\t<div class=\"row row-fix\">\r\n\t\t\t<div class=\"col-xs-4 col-sm-4\">\r\n\t\t\t\t<input type=\"text\" name=\"" . $field . "[lng]\" value=\"" . $value["lng"] . "\" placeholder=\"地理经度\"  class=\"form-control\" " . (($required ? "required" : "")) . "/>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-xs-4 col-sm-4\">\r\n\t\t\t\t<input type=\"text\" name=\"" . $field . "[lat]\" value=\"" . $value["lat"] . "\" placeholder=\"地理纬度\"  class=\"form-control\" " . (($required ? "required" : "")) . "/>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-xs-4 col-sm-4\">\r\n\t\t\t\t<button onclick=\"showCoordinate(this);\" class=\"btn btn-default\" type=\"button\">选择坐标</button>\r\n\t\t\t</div>\r\n\t\t</div>";
+	$s .= "\r\n\t\t<div class=\"row row-fix\">\r\n\t\t\t<div class=\"col-xs-4 col-sm-4\">\r\n\t\t\t\t<input id='lngV' type=\"text\" name=\"" . $field . "[lng]\" value=\"" . $value["lng"] . "\" placeholder=\"地理经度\"  class=\"form-control\" " . (($required ? "required" : "")) . "/>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-xs-4 col-sm-4\">\r\n\t\t\t\t<input id='latV' type=\"text\" name=\"" . $field . "[lat]\" value=\"" . $value["lat"] . "\" placeholder=\"地理纬度\"  class=\"form-control\" " . (($required ? "required" : "")) . "/>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"col-xs-4 col-sm-4\">\r\n\t\t\t\t<button onclick=\"showCoordinate(this);\" class=\"btn btn-default\" type=\"button\">选择坐标</button>\r\n\t\t\t</div>\r\n\t\t</div>";
 	return $s;
 }
 function cloud_w_upgrade_version($family, $version, $release = 0) 

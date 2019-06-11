@@ -14,7 +14,8 @@ if( $ta == "index" )
 }
 else 
 {
-	if( $ta == "suggestion" ) 
+    //备份原先的高德地图
+	/*if( $ta == "suggestion" )
 	{
 		load()->func("communication");
 		$key = trim($_GPC["key"]);
@@ -63,8 +64,38 @@ else
 			$result["tips"] = array_values($result["tips"]);
 		}
 		imessage(error(0, $result["tips"]), "", "ajax");
+	}*/
+	//替换为获取谷歌地图
+	if( $ta == "suggestion" )
+	{
+		load()->func("communication");
+		$key = trim($_GPC["key"]);
+		$config = $_W["we7_wmall"]["config"];
+		$query = array( "input" => $key, "language" => "zh-cn", "output" => "json", "key" => "AIzaSyB33OZdr-ysIdajseeLAYYdxIAy2uJNCvM");
+		$query = http_build_query($query);
+		$result = ihttp_get("https://maps.googleapis.com/maps/api/place/autocomplete/json?" . $query);
+		if( $result["status"] != 'OK')
+		{
+			imessage(error(-1, "访问出错"), "", "ajax");
+		}
+		$result = @json_decode($result["content"], true);
+		if( $result["status"] == 'OK')
+		{
+			foreach( $result["predictions"] as $key => $val )
+			{
+                $queryDetails = array('placeid'=>$val['place_id'],'fields'=>'geometry','key'=>'AIzaSyB33OZdr-ysIdajseeLAYYdxIAy2uJNCvM');
+                $queryDetails = http_build_query($queryDetails);
+                $httpGet = ihttp_get("https://maps.googleapis.com/maps/api/place/details/json?" . $queryDetails);
+                $geometry = json_decode($httpGet["content"], true);
+                foreach ( $geometry['result'] as $k => $v ) {
+                    $result['predictions'][$key]['lat'] = $v['location']['lat'];
+                    $result['predictions'][$key]['lng'] = $v['location']['lng'];
+                }
+			}
+		}
+		imessage(error(0, $result["predictions"]), "", "ajax");
 	}
-	else 
+	else
 	{
 		if( $ta == "code" ) 
 		{

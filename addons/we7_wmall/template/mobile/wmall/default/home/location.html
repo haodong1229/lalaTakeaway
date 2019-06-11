@@ -60,6 +60,18 @@
 	</div>
 	<{# }}>
 </script>
+<!--谷歌地图开始-->
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&libraries=places&callback=initAutocomplete" async defer></script>-->
+<!--<script>-->
+<!--	function initAutocomplete() {-->
+<!--		var input = document.getElementById('search');-->
+<!--		var searchBox = new google.maps.places.SearchBox(input);-->
+<!--		// map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);-->
+
+<!--	}-->
+<!--</script>-->
+<!--谷歌地图结束-->
+
 
 <script type="text/javascript" src="//webapi.amap.com/maps?v=1.4.1&key=550a3bf0cb6d96c3b43d330fb7d86950"></script>
 <script>
@@ -135,6 +147,16 @@ require(['tiny'], function(tiny){
 			}
 		});
 	});
+	function getAdress(re){
+		var addressHtml = '';
+		for(var i=0; i < re.length; i++){
+			addressHtml += '<li class="js-address-location" data-from="search" data-lng="'+re[i]['lng']+'" data-lat="'+re[i]['lat']+'" data-name="'+re[i]['structured_formatting']['main_text']+'" data-address="'+re[i]['structured_formatting']['secondary_text']+'">';
+			addressHtml += '<div class="search-end-name">'+re[i]['structured_formatting']['main_text']+'</div>';
+			addressHtml += '<div class="search-end-quyu"> '+re[i]['structured_formatting']['secondary_text']+' </div>';
+			addressHtml += '</li>';
+		}
+		$('#search-end-ls').html(addressHtml);
+	}
 
 	$(document).on('click', '#history-list .js-address-location,#search-end-ls .js-address-location, .sl-addr-block-ls .js-address-location', function(){//单击搜索的结果触发
 
@@ -154,16 +176,7 @@ require(['tiny'], function(tiny){
 		return false;
  	});
 
-	function getAdress(re){
-		var addressHtml = '';
-		for(var i=0; i < re.length; i++){
-			addressHtml += '<li class="js-address-location" data-from="search" data-lng="'+re[i]['lng']+'" data-lat="'+re[i]['lat']+'" data-name="'+re[i]['name']+'" data-address="'+re[i]['name']+'">';
-			addressHtml += '<div class="search-end-name">'+re[i]['name']+'</div>';
-			addressHtml += '<div class="search-end-quyu"> '+re[i]['address']+' </div>';
-			addressHtml += '</li>';
-		}
-		$('#search-end-ls').html(addressHtml);
-	}
+
 
  	var history = tiny.localStorage.get('historySearchLoc');
  	if(history && history.length > 0){

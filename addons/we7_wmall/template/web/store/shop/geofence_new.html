@@ -84,7 +84,7 @@
 				<(each areaItem.areas as item index)>
 				<div class="area-item area<(item.colorType)>" data-id="<(index)>">
 					<div class="area-item-inner <(if item.isActive == 1)>hide<(/if)>">
-						<div class="area-item-title">配送范围 <span class="pull-right editor-area-item <(if !isChange || isActive == 1)>hide<(/if)>" data-type="<(type)>" data-parentid="<(areaIndex)>" data-id="<(index)>">编辑</span></div>
+						<div class="area-item-title">配送范围 <span class="pull-right editor-area-item <(if !isChange || isActive == 2)>hide<(/if)>" data-type="<(type)>" data-parentid="<(areaIndex)>" data-id="<(index)>">编辑</span></div>
 						<div class="price-container hide">
 							起送价 <span class="start-send-price"><(item.send_price)></span> 元&nbsp;&nbsp;配送费 <span class="send-price"><(item.delivery_price)></span> 元&nbsp;&nbsp;满 <span class="send-price"><(item.delivery_free_price)></span> 元免配送费
 						</div>
@@ -146,7 +146,7 @@ irequire(['tmodtpl', 'web/geofence.new'],function(tmodtpl, geofence){
 			},
 			isChange: 1
 		};
-	console.dir(params);
+	// console.dir(params);
 	geofence.init(params);
 });
 </script>
