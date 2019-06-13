@@ -178,11 +178,11 @@ require(['tiny'], function(tiny){
 			$.toast('请输入手机号');
 			return false;
 		}
-		var reg = /^[01][3456789][0-9]{9}/;
-		if(!reg.test(mobile)) {
-			$.toast('手机号格式错误');
-			return false;
-		}
+		// var reg = /^[01][3456789][0-9]{9}/;
+		// if(!reg.test(mobile)) {
+		// 	$.toast('手机号格式错误');
+		// 	return false;
+		// }
 		var captcha = $.trim($('input[name="captcha"]').val());
 		if(!captcha) {
 			$.toast('请输入图形验证码');

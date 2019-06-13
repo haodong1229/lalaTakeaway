@@ -93,11 +93,10 @@ function tpl_form_field_tiny_coordinate($field, $value = array( ), $required = f
             var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
             layer.open({
                 type: 2,
-                title: \"位置定位\",
-                area: ['80%', '70%'],
-                shade: 0.3,
-                closeBtn: 1,
-                shadeClose: false,
+                maxmin:true,
+                title: '位置定位',
+                area: ['1000px', '600px'],
+                shadeClose: true,
                 content: 'index.php?c=site&a=entry&ctrl=config&ac=takeout&op=openmap&do=web&m=we7_wmall'
                 });
             });

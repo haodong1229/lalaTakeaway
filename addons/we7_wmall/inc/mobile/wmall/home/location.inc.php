@@ -74,13 +74,10 @@ else
 		$query = array( "input" => $key, "language" => "zh-cn", "output" => "json", "key" => "AIzaSyB33OZdr-ysIdajseeLAYYdxIAy2uJNCvM");
 		$query = http_build_query($query);
 		$result = ihttp_get("https://maps.googleapis.com/maps/api/place/autocomplete/json?" . $query);
-		if( $result["status"] != 'OK')
-		{
-			imessage(error(-1, "访问出错"), "", "ajax");
-		}
-		$result = @json_decode($result["content"], true);
 		if( $result["status"] == 'OK')
 		{
+		    $result = @json_decode($result["content"], true);
+//		    var_dump( $result );die;
 			foreach( $result["predictions"] as $key => $val )
 			{
                 $queryDetails = array('placeid'=>$val['place_id'],'fields'=>'geometry','key'=>'AIzaSyB33OZdr-ysIdajseeLAYYdxIAy2uJNCvM');
@@ -92,7 +89,9 @@ else
                     $result['predictions'][$key]['lng'] = $v['location']['lng'];
                 }
 			}
-		}
+		} else {
+            imessage(error(-1, "访问出错"), "", "ajax");
+        }
 		imessage(error(0, $result["predictions"]), "", "ajax");
 	}
 	else

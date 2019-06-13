@@ -37,7 +37,7 @@ $(function(){
 				});
 			});//返回定位信息
 			AMap.event.addListener(geolocation, 'error', function(){
-				$.toast('获取位置失败', location.href);
+				$.toast('高德获取位置失败', location.href);
 				return false;
 			});
 		});

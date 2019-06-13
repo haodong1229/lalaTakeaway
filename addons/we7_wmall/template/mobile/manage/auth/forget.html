@@ -13,6 +13,7 @@
 					<div class="item-content">
 						<div class="item-media"><i class="icon icon-phone1"></i></div>
 						<div class="item-inner border-1px-b">
+
 							<div class="item-input">
 								<input type="number" max="11" name="mobile" placeholder="请输入手机号">
 							</div>
@@ -81,21 +82,25 @@ require(['tiny'], function(tiny){
 			return false;
 		}
 		var mobile = $.trim($('input[name="mobile"]').val());
+		var areaNumber = $.trim($('#areaNumber').val());
+		var wholeNumber = areaNumber+mobile;
+		if (areaNumber == '') {return $.toast('请选择区号'), !1 }
+
 		if(!mobile) {
 			$.toast('请输入手机号');
 			return false;
 		}
-		var reg = /^[01][3456789][0-9]{9}/;
-		if(!reg.test(mobile)) {
-			$.toast('手机号格式错误');
-			return false;
-		}
+		// var reg = /^[01][3456789][0-9]{9}/;
+		// if(!reg.test(mobile)) {
+		// 	$.toast('手机号格式错误');
+		// 	return false;
+		// }
 		var captcha = $.trim($('input[name="captcha"]').val());
 		if(!captcha) {
 			$.toast('请输入图形验证码');
 			return false;
 		}
-		$.post(tiny.getUrl('system/common/code'), {mobile: mobile, product: '找回密码', captcha: captcha}, function(data){
+		$.post(tiny.getUrl('system/common/code'), {mobile: wholeNumber, product: '找回密码', captcha: captcha}, function(data){
 			if(data != 'success') {
 				$.toast(data);
 			} else {
@@ -125,15 +130,19 @@ require(['tiny'], function(tiny){
 			return false;
 		}
 		var mobile = $.trim($('input[name="mobile"]').val());
+		var areaNumber = $.trim($('#areaNumber').val());
+		var wholeNumber = areaNumber+mobile;
+		if (areaNumber == '') {return $.toast('请选择区号'), !1 }
+
 		if(!mobile) {
 			$.toast('请输入手机号');
 			return false;
 		}
-		var reg = /^[01][3456789][0-9]{9}/;
-		if(!reg.test(mobile)) {
-			$.toast('手机号格式错误');
-			return false;
-		}
+		// var reg = /^[01][3456789][0-9]{9}/;
+		// if(!reg.test(mobile)) {
+		// 	$.toast('手机号格式错误');
+		// 	return false;
+		// }
 		var code = $.trim($('input[name="code"]').val());
 		if(!code) {
 			$.toast('请输入短信验证码');
@@ -165,7 +174,7 @@ require(['tiny'], function(tiny){
 			return false;
 		}
 		$this.addClass("disabled");
-		$.post(tiny.getUrl('manage/auth/forget'), {mobile: mobile, password: password, code: code}, function(data){
+		$.post(tiny.getUrl('manage/auth/forget'), {mobile: wholeNumber, password: password, code: code}, function(data){
 			var result = $.parseJSON(data);
 			if(!result.message.errno) {
 				$.toast('设置新密码成功', result.message.message);
