@@ -5,17 +5,17 @@
 	<input type="hidden" name="groupid" value="{$groupid}">
 	<input type="hidden" name="work_status" value="{$work_status}">
 	{if $_W['is_agent']}
-		<div class="form-group">
-			<label class="col-xs-12 col-sm-3 col-md-2 control-label">选择代理区域</label>
-			<div class="col-sm-9 col-xs-12">
-				<select name="agentid" class="select2 js-select2 form-control width-130">
-					<option value="0">选择代理区域</option>
-					{loop $_W['agents'] $agent}
-						<option value="{$agent['id']}" {if $agentid == $agent['id']}selected{/if}>{$agent['area']}</option>
-					{/loop}
-				</select>
-			</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label">选择代理区域</label>
+		<div class="col-sm-9 col-xs-12">
+			<select name="agentid" class="select2 js-select2 form-control width-130">
+				<option value="0">选择代理区域</option>
+				{loop $_W['agents'] $agent}
+				<option value="{$agent['id']}" {if $agentid == $agent['id']}selected{/if}>{$agent['area']}</option>
+				{/loop}
+			</select>
 		</div>
+	</div>
 	{/if}
 	<div class="form-group">
 		<label class="col-xs-12 col-sm-3 col-md-2 control-label">工作状态</label>
@@ -53,19 +53,19 @@
 			</div>
 		</div>
 	</div>
-<!--
-	<div class="form-group">
-		<label class="col-xs-12 col-sm-3 col-md-2 control-label">配送员等级筛选</label>
-		<div class="col-sm-9 col-xs-12">
-			<div class="btn-group">
-				<a href="{php echo ifilter_url('groupid:');}" class="btn {if empty($groupid)}btn-primary{else}btn-default{/if}">不限</a>
-				{loop $groups $group}
-				<a href='{php echo ifilter_url("groupid:$group[id]");}' class="btn {if $groupid == $group['id']}btn-primary{else}btn-default{/if}">{$group['title']}</a>
-				{/loop}
-			</div>
-		</div>
-	</div>
--->
+	<!--
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label">配送员等级筛选</label>
+            <div class="col-sm-9 col-xs-12">
+                <div class="btn-group">
+                    <a href="{php echo ifilter_url('groupid:');}" class="btn {if empty($groupid)}btn-primary{else}btn-default{/if}">不限</a>
+                    {loop $groups $group}
+                    <a href='{php echo ifilter_url("groupid:$group[id]");}' class="btn {if $groupid == $group['id']}btn-primary{else}btn-default{/if}">{$group['title']}</a>
+                    {/loop}
+                </div>
+            </div>
+        </div>
+    -->
 	<div class="form-group">
 		<label class="col-xs-12 col-sm-3 col-md-2 control-label">搜索</label>
 		<div class="col-sm-4 col-xs-4">
@@ -102,12 +102,12 @@
 					<th>编号</th>
 					<th>头像</th>
 					{if $_W['is_agent']}
-						<th>所属城市</th>
+					<th>所属城市</th>
 					{/if}
 					<th>配送员名称<br>手机号/性别/年龄</th>
-<!--
-					<th>配送员等级</th>
--->
+					<!--
+                                        <th>配送员等级</th>
+                    -->
 					<th>账户余额</th>
 					<th>
 						绑定<br>
@@ -143,7 +143,7 @@
 						<img src="{php echo tomedia($item['avatar']);}" width="48"> {$item['nickname']}
 					</td>
 					{if $_W['is_agent']}
-						<td>{php echo toagent($item['agentid'])}</td>
+					<td>{php echo toagent($item['agentid'])}</td>
 					{/if}
 					<td>
 						{$item['title']}
@@ -152,27 +152,27 @@
 						<br/>
 						{$item['sex']} /{$item['age']}
 					</td>
-<!--
-					<td>{$groups[$item['groupid']]['title']}</td>
--->
+					<!--
+                                        <td>{$groups[$item['groupid']]['title']}</td>
+                    -->
 					<td>
 						<span class="label {if $item['credit2'] > 0}label-success{else}label-danger{/if}">{$item['credit2']}</span>
 					</td>
 					<td>
 						{if !empty($item['openid'])}
-							<span class="label label-success">
+						<span class="label label-success">
 								已绑定公众号
 							</span>
-							<br>
+						<br>
 						{/if}
 						{if !empty($item['openid_wxapp_deliveryer'])}
-							<span class="label label-primary {if !empty($item['openid'])}label-br{/if}">
+						<span class="label label-primary {if !empty($item['openid'])}label-br{/if}">
 								已绑定配送员小程序
 							</span>
-							<br>
+						<br>
 						{/if}
 						{if !empty($item['openid_wxapp'])}
-							<span class="label label-primary {if !empty($item['openid_wxapp_deliveryer'])}label-br{/if}">
+						<span class="label label-primary {if !empty($item['openid_wxapp_deliveryer'])}label-br{/if}">
 								已绑定顾客小程序
 							</span>
 						{/if}
@@ -237,9 +237,9 @@
 					<a href="{php echo iurl('deliveryer/plateform/group')}" class="btn btn-default js-batch" data-batch="modal">批量操作</a>
 				</div>
 				{if $_W['is_agent']}
-					<div class="pull-left">
-						<a href="{php echo iurl('deliveryer/plateform/agent')}" class="btn btn-default js-batch" data-batch="modal">所属代理</a>
-					</div>
+				<div class="pull-left">
+					<a href="{php echo iurl('deliveryer/plateform/agent')}" class="btn btn-default js-batch" data-batch="modal">所属代理</a>
+				</div>
 				{/if}
 				<div class="pull-right">
 					{$pager}
@@ -271,69 +271,69 @@
 	</div>
 </div>
 <script>
-$(function(){
-	$(document).on('click', '#show-login-modal', function(){
-		$('#qrcode-modal').modal('show');
-	});
+	$(function(){
+		$(document).on('click', '#show-login-modal', function(){
+			$('#qrcode-modal').modal('show');
+		});
 
-	$(document).on('click', '.btn-add', function(){
-		$('#add-container').modal('show');
-		$(document).on('click', '.btn-subm4it', function(){
-			var mobile = $('#mobile').val();
-			if(!mobile) {
-				Notify.info('手机号不能为空');
-				return false;
-			}
-			$.post("{php echo iurl('deliveryer/plateform/stat', array('op' => 'add_ptf_deliveryer'));}", {mobile: mobile}, function(data){
-				var result = $.parseJSON(data);
-				if(result.message.errno == -1) {
-					Notify.info(result.message.message);
+		$(document).on('click', '.btn-add', function(){
+			$('#add-container').modal('show');
+			$(document).on('click', '.btn-subm4it', function(){
+				var mobile = $('#mobile').val();
+				if(!mobile) {
+					Notify.info('手机号不能为空');
 					return false;
-				} else {
-					location.reload();
 				}
+				$.post("{php echo iurl('deliveryer/plateform/stat', array('op' => 'add_ptf_deliveryer'));}", {mobile: mobile}, function(data){
+					var result = $.parseJSON(data);
+					if(result.message.errno == -1) {
+						Notify.info(result.message.message);
+						return false;
+					} else {
+						location.reload();
+					}
+				});
 			});
 		});
-	});
 
-	$(document).on('click', '.account-turncate-item', function(){
-		var $this = $(this);
-		var type = $this.data('type');
-		var ids = [];
-		if(type == 'single') {
-			var sid = $(this).data('deliveryer-id');
-			ids.push(sid);
-		} else {
-			$('#form-deliveryer :checkbox[name="ids[]"]:checked').each(function(){
-				var id = $(this).val();
-				if(id) {
-					ids.push(id);
-				}
-			});
-		}
-		if(ids.length == 0) {
-			Notify.info('请选择要操作的账户');
-			return false;
-		}
-		$('#modal-account-turncate').modal('show');
-		$(document).on('click', '.account-turncate-submit', function(){
-			var remark = $.trim($('#modal-account-turncate textarea[name="remark"]').val());
-			if(!remark) {
-				Notify.info('账户清零原因不能为空');
+		$(document).on('click', '.account-turncate-item', function(){
+			var $this = $(this);
+			var type = $this.data('type');
+			var ids = [];
+			if(type == 'single') {
+				var sid = $(this).data('deliveryer-id');
+				ids.push(sid);
+			} else {
+				$('#form-deliveryer :checkbox[name="ids[]"]:checked').each(function(){
+					var id = $(this).val();
+					if(id) {
+						ids.push(id);
+					}
+				});
+			}
+			if(ids.length == 0) {
+				Notify.info('请选择要操作的账户');
 				return false;
 			}
-			$.post("{php echo iurl('deliveryer/plateform/account_turncate');}", {ids: ids, remark: remark}, function(data){
-				var result = $.parseJSON(data);
-				if(result.message.errno != 0) {
-					Notify.error(result.message.message);
-				} else {
-					$('#modal-account-turncate').modal('hide');
-					Notify.success('账户清零成功', location.href);
+			$('#modal-account-turncate').modal('show');
+			$(document).on('click', '.account-turncate-submit', function(){
+				var remark = $.trim($('#modal-account-turncate textarea[name="remark"]').val());
+				if(!remark) {
+					Notify.info('账户清零原因不能为空');
+					return false;
 				}
+				$.post("{php echo iurl('deliveryer/plateform/account_turncate');}", {ids: ids, remark: remark}, function(data){
+					var result = $.parseJSON(data);
+					if(result.message.errno != 0) {
+						Notify.error(result.message.message);
+					} else {
+						$('#modal-account-turncate').modal('hide');
+						Notify.success('账户清零成功', location.href);
+					}
+				});
 			});
 		});
 	});
-});
 </script>
 {/if}
 
@@ -385,51 +385,51 @@ $(function(){
 	</div>
 </div>
 <script>
-require(['daterangepicker'], function() {
-	irequire(['chart'], function(){
-		$('.daterange').on('apply.daterangepicker', function(ev, picker) {
+	require(['daterangepicker'], function() {
+		irequire(['chart'], function(){
+			$('.daterange').on('apply.daterangepicker', function(ev, picker) {
+				refresh();
+			});
+
+			var chart = null;
+			var templates = {
+				flow1: {
+					label: '配送(单)',
+					fillColor : "rgba(36,165,222,0.1)",
+					strokeColor : "rgba(36,165,222,1)",
+					pointColor : "rgba(36,165,222,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(36,165,222,1)",
+				}
+			};
+
+			function refresh() {
+				$('#chart-container').html('<canvas id="myChart" width="1200" height="300"></canvas>');
+				var url = location.href + '&#aaaa';
+				var params = {
+					'start': $('#trade input[name="time[start]"]').val(),
+					'end': $('#trade input[name="time[end]"]').val()
+				};
+				$.post(url, params, function(data){
+					var data = $.parseJSON(data)
+					var datasets = data.datasets;
+					var label = data.label;
+					var ds = $.extend(true, {}, templates);
+					ds.flow1.data = datasets.flow1;
+					var lineChartData = {
+						labels : label,
+						datasets : [ds.flow1]
+					};
+					var ctx = document.getElementById("myChart").getContext("2d");
+					chart = new Chart(ctx).Line(lineChartData, {
+						responsive: true
+					});
+				});
+			}
 			refresh();
 		});
-
-		var chart = null;
-		var templates = {
-			flow1: {
-				label: '配送(单)',
-				fillColor : "rgba(36,165,222,0.1)",
-				strokeColor : "rgba(36,165,222,1)",
-				pointColor : "rgba(36,165,222,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(36,165,222,1)",
-			}
-		};
-
-		function refresh() {
-			$('#chart-container').html('<canvas id="myChart" width="1200" height="300"></canvas>');
-			var url = location.href + '&#aaaa';
-			var params = {
-				'start': $('#trade input[name="time[start]"]').val(),
-				'end': $('#trade input[name="time[end]"]').val()
-			};
-			$.post(url, params, function(data){
-				var data = $.parseJSON(data)
-				var datasets = data.datasets;
-				var label = data.label;
-				var ds = $.extend(true, {}, templates);
-				ds.flow1.data = datasets.flow1;
-				var lineChartData = {
-					labels : label,
-					datasets : [ds.flow1]
-				};
-				var ctx = document.getElementById("myChart").getContext("2d");
-				chart = new Chart(ctx).Line(lineChartData, {
-					responsive: true
-				});
-			});
-		}
-		refresh();
 	});
-});
 </script>
 {/if}
 {if $op == 'post'}
@@ -443,7 +443,7 @@ require(['daterangepicker'], function() {
 			<div class="col-sm-9 col-xs-12">
 				<select name="agent_id" class="form-control">
 					{loop $agents $agent}
-						<option value="{$agent['id']}" {if $deliveryer['agentid'] == $agent['id']}selected{/if}>{$agent['title']}</option>
+					<option value="{$agent['id']}" {if $deliveryer['agentid'] == $agent['id']}selected{/if}>{$agent['title']}</option>
 					{/loop}
 				</select>
 			</div>
@@ -468,6 +468,7 @@ require(['daterangepicker'], function() {
 			<div class="col-sm-9 col-xs-12">
 				<input type="text" name="mobile" value="{$deliveryer['mobile']}" class="form-control" placeholder="用于账号登录" required="true">
 				<div class="help-block">手机号用于配送员账号登录, 请认真填写</div>
+				<div class="help-block">柬埔寨请在前面加855,香港请在前面加852.例如:85512556292</div>
 			</div>
 		</div>
 		<div class="form-group">
@@ -771,38 +772,38 @@ require(['daterangepicker'], function() {
 	</form>
 </div>
 <script>
-$(function() {
-	$('#form1').submit(function(){
-		var password = $.trim($('input[name="password"]').val());
-		if(password) {
-			var length = password.length;
-			if(length < 8 || length > 20) {
-				Notify.info('请输入8-20位密码');
-				$('form').attr('stop', 1);
-				return false;
+	$(function() {
+		$('#form1').submit(function(){
+			var password = $.trim($('input[name="password"]').val());
+			if(password) {
+				var length = password.length;
+				if(length < 8 || length > 20) {
+					Notify.info('请输入8-20位密码');
+					$('form').attr('stop', 1);
+					return false;
+				}
+				var reg = /[0-9]+[a-zA-Z]+[0-9a-zA-Z]*|[a-zA-Z]+[0-9]+[0-9a-zA-Z]*/;
+				if(!reg.test(password)) {
+					Notify.info('密码必须由数字和字母组合');
+					$('form').attr('stop', 1);
+					return false;
+				}
+				var repassword = $.trim($('input[name="repassword"]').val());
+				if(!repassword) {
+					Notify.info('请重复输入密码');
+					$('form').attr('stop', 1);
+					return false;
+				}
+				if(password != repassword) {
+					Notify.info('两次密码输入不一致');
+					$('form').attr('stop', 1);
+					return false;
+				}
 			}
-			var reg = /[0-9]+[a-zA-Z]+[0-9a-zA-Z]*|[a-zA-Z]+[0-9]+[0-9a-zA-Z]*/;
-			if(!reg.test(password)) {
-				Notify.info('密码必须由数字和字母组合');
-				$('form').attr('stop', 1);
-				return false;
-			}
-			var repassword = $.trim($('input[name="repassword"]').val());
-			if(!repassword) {
-				Notify.info('请重复输入密码');
-				$('form').attr('stop', 1);
-				return false;
-			}
-			if(password != repassword) {
-				Notify.info('两次密码输入不一致');
-				$('form').attr('stop', 1);
-				return false;
-			}
-		}
-		$('form').attr('stop', 0);
-		return false;
+			$('form').attr('stop', 0);
+			return false;
+		});
 	});
-});
 </script>
 
 {/if}

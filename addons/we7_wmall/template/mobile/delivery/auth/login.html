@@ -13,6 +13,11 @@
 					<div class="item-content">
 						<div class="item-media"><i class="icon icon-phone1"></i></div>
 						<div class="item-inner border-1px-b">
+								<select id="areaNumber">
+									<option value="">--请选择区号--</option>
+									<option value="855">855(柬埔寨)</option>
+									<option value="852">852(香港)</option>
+								</select>
 							<div class="item-input">
 								<input type="number" max="11" name="mobile" placeholder="请输入手机号">
 							</div>
@@ -51,22 +56,26 @@ require(['tiny'], function(tiny){
 			return false;
 		}
 		var mobile = $.trim($('input[name="mobile"]').val());
+		var areaNumber = $.trim($('#areaNumber').val());
+		var wholeNumber = areaNumber+mobile;
+		if (areaNumber == '') {return $.toast('请选择区号'), !1 }
+
 		if(!mobile) {
 			$.toast('请输入手机号');
 			return false;
 		}
-		var reg = /^[01][3456789][0-9]{9}/;
-		if(!reg.test(mobile)) {
-			$.toast('手机号格式错误');
-			return false;
-		}
+		// var reg = /^[01][3456789][0-9]{9}/;
+		// if(!reg.test(mobile)) {
+		// 	$.toast('手机号格式错误');
+		// 	return false;
+		// }
 		var password = $.trim($('input[name="password"]').val());
 		if(!password) {
 			$.toast('请输入密码');
 			return false;
 		}
 		$this.addClass("disabled");
-		$.post(tiny.getUrl('delivery/auth/login'), {mobile: mobile, password: password, force: force}, function(data){
+		$.post(tiny.getUrl('delivery/auth/login'), {mobile: wholeNumber, password: password, force: force}, function(data){
 			var result = $.parseJSON(data);
 			if(!result.message.errno) {
 				$.toast('登录成功', result.message.message);

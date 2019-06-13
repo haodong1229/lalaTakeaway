@@ -5,9 +5,11 @@ define(["tiny"], function (a) {
             var c = $(this);
             if ($(this).hasClass("disabled")) return !1;
             var d = $.trim($('input[name="mobile"]').val());
+            //添加区号在前面
             var areaNumber = $.trim($('#areaNumber').val());
             var wholeNumber = areaNumber+d;
             if (areaNumber == '') {return $.toast('请选择区号'), !1 }
+
             if (!d) return $.toast("请输入手机号"), !1;
             // if (!/^[01][3456789][0-9]{9}/.test(d)) return $.toast("手机号格式错误"), !1;
             var e = $.trim($('input[name="password"]').val());
