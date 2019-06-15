@@ -469,23 +469,6 @@ require(['tiny'], function(tiny){
 	{$config['seniverse']}
 {else}
 	<script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script>
-	<script>
-		tpwidget("init", {
-			"flavor": "slim",
-			"location": "WX4FBXXFKE4F",
-			"geolocation": "enabled",
-			"language": "zh-chs",
-			"unit": "c",
-			"theme": "chameleon",
-			"container": "tp-weather-widget",
-			"bubble": "disabled",
-			"alarmType": "badge",
-			"color": "#FFFFFF",
-			"uid": "UE7850A8B2",
-			"hash": "165ced0b9eb27b0b5cf87185cc28a3ec"
-		});
-		tpwidget("show");
-	</script>
 {/if}
 {if !empty($config['meiqia'])}
 	{$config['meiqia']}
