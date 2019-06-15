@@ -15,7 +15,7 @@ if( $ta == "index" )
 else 
 {
     //备份原先的高德地图
-	/*if( $ta == "suggestion" )
+	if( $ta == "suggestion" )
 	{
 		load()->func("communication");
 		$key = trim($_GPC["key"]);
@@ -64,9 +64,9 @@ else
 			$result["tips"] = array_values($result["tips"]);
 		}
 		imessage(error(0, $result["tips"]), "", "ajax");
-	}*/
+	}
 	//替换为获取谷歌地图
-	if( $ta == "suggestion" )
+	/*if( $ta == "suggestion" )
 	{
 		load()->func("communication");
 		$key = trim($_GPC["key"]);
@@ -77,7 +77,6 @@ else
 		if( $result["status"] == 'OK')
 		{
 		    $result = @json_decode($result["content"], true);
-//		    var_dump( $result );die;
 			foreach( $result["predictions"] as $key => $val )
 			{
                 $queryDetails = array('placeid'=>$val['place_id'],'fields'=>'geometry','key'=>'AIzaSyB33OZdr-ysIdajseeLAYYdxIAy2uJNCvM');
@@ -93,7 +92,7 @@ else
             imessage(error(-1, "访问出错"), "", "ajax");
         }
 		imessage(error(0, $result["predictions"]), "", "ajax");
-	}
+	}*/
 	else
 	{
 		if( $ta == "code" ) 

@@ -18,7 +18,7 @@
 		<div class="position-container">
 			<div id="position"><span class="icon icon-focus"></span> <span class="position-status">定位到当前地址</span></div>
 		</div>
-		
+
 		{if !empty($addresses)}
 		<div class="content-block-title">
 			<i class="icon icon-location"></i> 我的收货地址
@@ -61,39 +61,51 @@
 	<{# }}>
 </script>
 <!--谷歌地图开始-->
-<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&libraries=places&callback=initAutocomplete" async defer></script>-->
-<!--<script>-->
-<!--	function initAutocomplete() {-->
-<!--		var input = document.getElementById('search');-->
-<!--		var searchBox = new google.maps.places.SearchBox(input);-->
-<!--		// map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);-->
 
-<!--	}-->
-<!--</script>-->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB33OZdr-ysIdajseeLAYYdxIAy2uJNCvM&libraries=places"
+		async defer></script>
+
 <!--谷歌地图结束-->
 
 
-<script type="text/javascript" src="//webapi.amap.com/maps?v=1.4.1&key=550a3bf0cb6d96c3b43d330fb7d86950"></script>
+<!--<script type="text/javascript" src="//webapi.amap.com/maps?v=1.4.1&key=550a3bf0cb6d96c3b43d330fb7d86950"></script>-->
+
 <script>
+
+
 require(['tiny'], function(tiny){
+	// function getLocation() {
+	// 	var map, geolocation;
+	// 	map = new AMap.Map('allmap');
+	// 	map.plugin('AMap.Geolocation', function() {
+	// 		geolocation = new AMap.Geolocation({
+	// 			enableHighAccuracy: true,//是否使用高精度定位，默认:true
+	// 		});
+	// 		geolocation.getCurrentPosition();
+	// 		AMap.event.addListener(geolocation, 'complete', getPositionInfo);//返回定位信息
+	// 		AMap.event.addListener(geolocation, 'error', function(){
+	// 			alert('高德定位出错,请手动搜索地址');
+	// 			$('.position-status').html('定位出错');
+	// 		});      //返回定位出错信息
+	// 	});
+	// }
 	function getLocation() {
-		var map, geolocation;
-		map = new AMap.Map('allmap');
-		map.plugin('AMap.Geolocation', function() {
-			geolocation = new AMap.Geolocation({
-				enableHighAccuracy: true,//是否使用高精度定位，默认:true
+		// var geocoder = new google.maps.Geocoder;//地理编码
+		//使用h5地位位置定位(需翻墙才能正常使用)
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(getPositionInfo,function (positionError) {
+				// console.log('error');
+				console.log(positionError);
 			});
-			geolocation.getCurrentPosition();
-			AMap.event.addListener(geolocation, 'complete', getPositionInfo);//返回定位信息
-			AMap.event.addListener(geolocation, 'error', function(){
-				alert('定位出错,请手动搜索地址');
-				$('.position-status').html('定位出错');
-			});      //返回定位出错信息
-		});
+			
+		} else {
+			// Browser doesn't support Geolocation
+			console.log('Browser doesn\'t support Geolocation');
+		}
 	}
 
 	function getPositionInfo(data) {
-		var point = data.position;
+		/*var point = data.position;
 		$('#js-lat').html(point.lat);
 		$('#js-lng').html(point.lng);
 		var lnglatXY = [point.lng, point.lat]; //已知点坐标
@@ -113,10 +125,29 @@ require(['tiny'], function(tiny){
 				}
 			});
 		});
-		return ;
+		return ;*/
+		var geocoder = new google.maps.Geocoder;//谷歌地理编码
+		var lat=position.coords.latitude;//获取h5地理位置的经纬度
+		var lng=position.coords.longitude;
+		$('#js-lat').html(lat);
+		$('#js-lng').html(lng);
+		geocoder.geocode({'location': {'lat':lat,'lng':lng}}, function(results, status) {
+			if (status === 'OK'){
+				if (results[0]) {
+					var position = results[0].formatted_address;
+					$('#position').html(position);
+					var params = '&lat='+lat+'&lng='+lng+'&address='+position;
+					location.href = "{php echo imurl('wmall/home/index', array('d' => 1))}"+params;
+				} else {
+					alert('定位失败');
+				}
+			} else {
+				alert('定位错误:' + status);
+			}
+		});
 	}
 
-	$(document).on('click', '#position', function() {
+	$(document).on('click', '#position', function() {//单击定位到当前地址触发
 		$('.position-status').html('正在定位中...');
 		getLocation();
 	});
@@ -133,6 +164,38 @@ require(['tiny'], function(tiny){
 		}
 	});
 
+	function initService(key) {
+		var displaySuggestions = function(predictions, status) {
+			var obj = predictions;
+			if (status != google.maps.places.PlacesServiceStatus.OK) {
+				alert(status);
+				return;
+			}
+			var addressHtml = '';
+			for ( let x in predictions ) {
+				var place_id = predictions[x].place_id;
+				geocoder.geocode({'placeId': place_id}, function(results, status) {
+					if (status !== 'OK') {
+						alert('地理编码错误: ' + status);
+						return;
+					}
+					obj[x].lat = results[0].geometry.location.lat();
+					obj[x].lng = results[0].geometry.location.lng();
+					//最终效果
+					addressHtml += '<li class="js-address-location" data-from="search" data-lng="'+obj[x]['lng']+'" data-lat="'+obj[x]['lat']+'" data-name="'+obj[x]['structured_formatting']['main_text']+'" data-address="'+obj[x]['structured_formatting']['secondary_text']+'">';
+					addressHtml += '<div class="search-end-name">'+obj[x]['structured_formatting']['main_text']+'</div>';
+					addressHtml += '<div class="search-end-quyu"> '+obj[x]['structured_formatting']['secondary_text']+' </div>';
+					addressHtml += '</li>';
+					$('#search-end-ls').html(addressHtml);
+				});
+			}
+		};
+
+		var geocoder = new google.maps.Geocoder;//地理编码
+		var service = new google.maps.places.AutocompleteService();//自动填充功能
+		service.getPlacePredictions({ input: key,componentRestrictions:{'country': ["kh","hk"]}}, displaySuggestions);
+	}
+
 	$('#search').bind('input', function(){//输入input框则触发
 		$('#addr-list').addClass('hide');
 		$('#search-end-ls').parent().addClass('search-end-blk');
@@ -140,14 +203,18 @@ require(['tiny'], function(tiny){
 		if(!key) {
 			return false;
 		}
-		$.post("{php echo imurl('wmall/home/location/suggestion');}", {key: key}, function(data){
-			var result = $.parseJSON(data);
-			if(result.message.error != -1) {
-				getAdress(result.message.message);
-			}
-		});
+		initService(key);
+
+		// $.post("{php echo imurl('wmall/home/location/suggestion');}", {key: key}, function(data){
+		// 	var result = $.parseJSON(data);
+		// 	// console.log(result);
+		// 	if(result.message.error != -1) {
+		// 		getAdress(result.message.message);
+		// 	}
+		// });
 	});
-	function getAdress(re){
+	//没用到
+	/*function getAdress(re){
 		var addressHtml = '';
 		for(var i=0; i < re.length; i++){
 			addressHtml += '<li class="js-address-location" data-from="search" data-lng="'+re[i]['lng']+'" data-lat="'+re[i]['lat']+'" data-name="'+re[i]['structured_formatting']['main_text']+'" data-address="'+re[i]['structured_formatting']['secondary_text']+'">';
@@ -156,13 +223,13 @@ require(['tiny'], function(tiny){
 			addressHtml += '</li>';
 		}
 		$('#search-end-ls').html(addressHtml);
-	}
+	}*/
 
 	$(document).on('click', '#history-list .js-address-location,#search-end-ls .js-address-location, .sl-addr-block-ls .js-address-location', function(){//单击搜索的结果触发
 
  		var lat = !$(this).data('lat') ? '' : $(this).data('lat');
 		var lng = !$(this).data('lng') ? '' : $(this).data('lng');
-		var address = $(this).data('address');
+		var address = $(this).data('name');
 		var from = $(this).data('from');
 		if(from == 'search'){
 			tiny.localStorage.push('historySearchLoc', {
