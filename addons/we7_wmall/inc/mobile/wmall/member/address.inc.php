@@ -62,6 +62,31 @@ if( $ta == "list" )
 		}
 	}
 }
+if ( $ta == "searchMap") {
+    //谷歌地图后台访问接口
+    load()->func("communication");
+    $key = trim($_GPC["key"]);
+    if (empty($key)) {imessage(error(0,'缺少必须参数'), "", "ajax");}
+    $query = array( "location" => $key , "radius" => "150", "language" => "zh-cn", "key" => "AIzaSyB33OZdr-ysIdajseeLAYYdxIAy2uJNCvM");//设置搜索半径150米
+    $query = http_build_query($query);
+    $result = ihttp_get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?" . $query);
+    if( $result["status"] == 'OK')
+    {
+        $result = @json_decode($result["content"], true);
+        $data = [];
+        foreach( $result["results"] as $key => $val )
+        {
+            $data[$key]['id'] = $val['id'];
+            $data[$key]['location'] = $val['geometry']['location'];
+            $data[$key]['name'] = $val['name'];
+            $data[$key]['place_id'] = $val['place_id'];
+            $data[$key]['icon'] = $val['icon'];
+        }
+    } else {
+        imessage(error(-1, "访问出错"), "", "ajax");
+    }
+    imessage(error(0, $data), "", "ajax");
+}
 if( $ta == "post" ) 
 {
 	$id = intval($_GPC["id"]);
