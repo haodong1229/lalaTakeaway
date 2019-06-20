@@ -13,6 +13,7 @@ if( 0 < $sid )
 	$store = store_fetch($sid);
 	$order_address_limit = $store["order_address_limit"];
 }
+
 if( $_W["is_agent"] ) 
 {
 	$store["auto_get_address"] = 1;
@@ -21,6 +22,7 @@ $redirect_type = trim($_GPC["redirect_type"]);
 $redirect_input = trim($_GPC["redirect_input"]);
 $routes = array( "order" => imurl("wmall/order/create/index", array( "sid" => $_GPC["sid"], "r" => 1, "recordid" => $_GPC["recordid"], "redPacket_id" => $_GPC["redPacket_id"] )) . "&address_id=" );
 $redirect_url = $routes[$redirect_type];
+
 if( $ta == "location" ) 
 {
 	$config = $_W["we7_wmall"]["config"]["takeout"];
@@ -34,6 +36,7 @@ if( $ta == "location" )
 		$map["serve_radius"] = $config["range"]["serve_radius"];
 	}
 }
+
 if( $ta == "list" ) 
 {
 	$addresses = member_fetchall_address();

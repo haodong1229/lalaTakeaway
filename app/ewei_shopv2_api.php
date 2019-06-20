@@ -1,4 +1,4 @@
-<?php 
+ <?php 
 define("IN_SYS", true);
 require(__DIR__ . "/../framework/bootstrap.inc.php");
 load()->web("common");
