@@ -152,7 +152,7 @@ require(['tiny'], function(tiny){
 		if($(this).hasClass('disabled')) {
 			return false;
 		}
-		var openid = $.trim($(':hidden[name="openid"]').val());
+		var openid = $.trim($(':hidden[name="openid"]').val(1));
 		if(!openid) {
 			$.toast("获取微信信息错误");
 			return false;

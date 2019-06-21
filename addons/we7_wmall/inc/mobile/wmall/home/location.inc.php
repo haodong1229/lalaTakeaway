@@ -15,7 +15,7 @@ if( $ta == "index" )
 else 
 {
     //备份原先的高德地图
-	if( $ta == "suggestion" )
+	/*if( $ta == "suggestion" )
 	{
 		load()->func("communication");
 		$key = trim($_GPC["key"]);
@@ -89,9 +89,9 @@ else
             imessage(error(-1, "访问出错"), "", "ajax");
         }
         imessage(error(0, $data), "", "ajax");
-    }
+    }*/
 	//替换为获取谷歌地图
-	/*if( $ta == "suggestion" )
+	if( $ta == "suggestion" )
 	{
 		load()->func("communication");
 		$key = trim($_GPC["key"]);
@@ -117,7 +117,7 @@ else
             imessage(error(-1, "访问出错"), "", "ajax");
         }
 		imessage(error(0, $result["predictions"]), "", "ajax");
-	}*/
+	}
 	else
 	{
 		if( $ta == "code" ) 

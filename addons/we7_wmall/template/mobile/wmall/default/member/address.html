@@ -108,10 +108,6 @@
 	var address1 = decodeURIComponent(address[1]);//解决从URL中拿取中文时出现的乱码现象
 	require(['tiny'], function(tiny){
 		tiny.getLocation(function(location) {}, function(position) {
-			console.log(tiny)
-			// $('#address').val(position.address);
-			// $('#lng').val(position.location_y);
-			// $('#lat').val(position.location_x);
 			$('#address').val(address1);
 			$('#lng').val(lng);
 			$('#lat').val(lat);
@@ -134,13 +130,15 @@ $(function(){
 			return false;
 		}
 		var mobile = $.trim($('.mobile').val());
+
 		var reg = /^[01][3456789][0-9]{9}$/;
 		var reg1 = /^([855])\d{11}/;
 		if(!reg.test(mobile)) {
 			if(!reg1.test(mobile)){
 					$.toast("手机号格式错误");
 					return false;
-
+			}
+			
 		}
 		var sex = $.trim($('.sex:checked').val());
 		if(!sex) {
@@ -325,14 +323,10 @@ $(function(){
 
 	</header>
 	<div class="content">
-		<!-- 地图   onclick="clik()"-->
+		<!-- 地图 -->
 		<div class="map" id="dt">
 			<div id="allmap"></div>
-			<!-- <div id="img"></div> -->
 			<img id="img" style="width:25px;height:25px;position:relative;top:-149px;left:311px;" src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png" />
-			<!-- <div class="dot" style="display:block;"></div> -->
-			<!-- <input name="lat" id="lat" type="hidden"/>
-			<input name="lng" id="lng" type="hidden"/> -->
 		</div>
 		<div class="buttons-tab select-tab border-1px-t" id="class1">
 			<img style='width:22px;height:22px;position:relative;top:14px;left:5px;' src='https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png'></img>
@@ -344,196 +338,7 @@ $(function(){
 </div>
    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB33OZdr-ysIdajseeLAYYdxIAy2uJNCvM&libraries=places"></script>
 <script type="text/javascript">
-		var geshi = {
-	"message": {
-		"errno": 0,
-		"message": [{
-			"id": "3c359536b1aec9b816c0d0098d31f1dbd4b04c64",
-			"location": {
-				"lat": 25.0329694,
-				"lng": 121.5654177
-			},
-			"name": "台北市",
-			"place_id": "ChIJmQrivHKsQjQR4MIK3c41aj8",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/geocode-71.png"
-		}, {
-			"id": "72df855192ce684d6b7a4c1357c6112c9b69bd01",
-			"location": {
-				"lat": 24.999166,
-				"lng": 121.459636
-			},
-			"name": "仁爱里",
-			"place_id": "ChIJL93BIaUCaDQRpkoS4_tOSXk",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/generic_business-71.png"
-		}, {
-			"id": "9e7d656cdebfb1b4e05d52252bedc14a2c9e7918",
-			"location": {
-				"lat": 24.998613,
-				"lng": 121.461173
-			},
-			"name": "莱尔富便利商店 北县板美店",
-			"place_id": "ChIJE4LewKQCaDQR2LMtdFFRfq0",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/shopping-71.png"
-		}, {
-			"id": "564fc915e40d779b3360e4ea5eb25c47b8c49b82",
-			"location": {
-				"lat": 24.998039,
-				"lng": 121.460517
-			},
-			"name": "板桥三圣太子坛",
-			"place_id": "ChIJe6mbTh6oQjQRzmJ2iBVSf1M",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/generic_business-71.png"
-		}, {
-			"id": "f23d4150020530b76877fdead0014c2341136cc7",
-			"location": {
-				"lat": 24.9986502,
-				"lng": 121.4613297
-			},
-			"name": "咪咪精品童装",
-			"place_id": "ChIJ6f99v6QCaDQR4xY03o48oe4",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/shopping-71.png"
-		}, {
-			"id": "557a4a9131cfd18e57c7ec10ff87541ec76b5507",
-			"location": {
-				"lat": 24.998657,
-				"lng": 121.46148
-			},
-			"name": "全家便利商店 板桥板庆店",
-			"place_id": "ChIJwYkQJ7ECaDQROKf9QSftkrQ",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/shopping-71.png"
-		}, {
-			"id": "86c2d560964c86f4297c004abfd21edfdf559d94",
-			"location": {
-				"lat": 24.998657,
-				"lng": 121.46148
-			},
-			"name": "國泰世華ATM",
-			"place_id": "ChIJn8quv6QCaDQREBQvKOu3u0w",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/atm-71.png"
-		}, {
-			"id": "53be408e96a8380ee0c2edde57dd696af6e9ef63",
-			"location": {
-				"lat": 24.998657,
-				"lng": 121.46148
-			},
-			"name": "国泰世华银行ATM",
-			"place_id": "ChIJP5phoHEDaDQR1tm2ze9UyAg",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/atm-71.png"
-		}, {
-			"id": "fd0a83e01fa4a8e7e634bf961cce*屏蔽的关键字*80540b2dd",
-			"location": {
-				"lat": 24.997593,
-				"lng": 121.461113
-			},
-			"name": "阿弟仔鸡肉",
-			"place_id": "ChIJG7Qvy6QCaDQRlq-yHKap6rk",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/shopping-71.png"
-		}, {
-			"id": "e81fd5797810153866cf78ff71550155720fd2ec",
-			"location": {
-				"lat": 24.9995711,
-				"lng": 121.4604224
-			},
-			"name": "玨谊咖啡",
-			"place_id": "ChIJAefsFaUCaDQRDz1aXCK3bOs",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/generic_business-71.png"
-		}, {
-			"id": "4a05ca1cf57b078ca55ecf3007167f63606f6e9f",
-			"location": {
-				"lat": 24.9985239,
-				"lng": 121.460342
-			},
-			"name": "大禹櫻花水電廚具",
-			"place_id": "ChIJoWo42qQCaDQR0ZSbB2DzD6o",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/shopping-71.png"
-		}, {
-			"id": "29afad311009441fd601225015e0b0d17e166e09",
-			"location": {
-				"lat": 24.998515,
-				"lng": 121.460267
-			},
-			"name": "机车行",
-			"place_id": "ChIJE1cg2qQCaDQR9NwMPK8JvzI",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/generic_business-71.png"
-		}, {
-			"id": "26f236ccc482e622081fd772512174241ce8cb03",
-			"location": {
-				"lat": 24.9985051,
-				"lng": 121.4602392
-			},
-			"name": "泰原",
-			"place_id": "ChIJ6ZD02aQCaDQRSXVw5dX7cyk",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/generic_business-71.png"
-		}, {
-			"id": "14b81d810de20eb2561055eded9e605f48bc009b",
-			"location": {
-				"lat": 24.998532,
-				"lng": 121.460417
-			},
-			"name": "南荣素食商行",
-			"place_id": "ChIJZahW2qQCaDQR2tJOLJ7NsbY",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/generic_business-71.png"
-		}, {
-			"id": "eb8dff28b4391d0f517147b58e2eb8998d58394a",
-			"location": {
-				"lat": 24.9985415,
-				"lng": 121.4604144
-			},
-			"name": "仁爱快餐",
-			"place_id": "ChIJZahW2qQCaDQRuhvuS0DkeBs",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/restaurant-71.png"
-		}, {
-			"id": "ac362bbb938dcc2af9b4ec74eeabbb92923b0a98",
-			"location": {
-				"lat": 24.9985959,
-				"lng": 121.460349
-			},
-			"name": "招莱旺素食烘焙坊",
-			"place_id": "ChIJ3SO226QCaDQRzC9PnqAmFRE",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/restaurant-71.png"
-		}, {
-			"id": "75c6fe38e441a239eaf758ed1abaee37cc0db0f5",
-			"location": {
-				"lat": 24.998596,
-				"lng": 121.460349
-			},
-			"name": "男女装修改",
-			"place_id": "ChIJ3SO226QCaDQR_nK4uA6-lKM",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/shopping-71.png"
-		}, {
-			"id": "2df3362a7de1e20595d59631b05e9810fd585a5b",
-			"location": {
-				"lat": 24.998582,
-				"lng": 121.460252
-			},
-			"name": "美的发型工作室",
-			"place_id": "ChIJp1-A2aQCaDQRvZFjNTSORpA",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/generic_business-71.png"
-		}, {
-			"id": "151e8b5c0a702771e0e5aefd548ea164d95942bb",
-			"location": {
-				"lat": 24.998582,
-				"lng": 121.460252
-			},
-			"name": "晶媄发舍",
-			"place_id": "ChIJp1-A2aQCaDQRhVOnCUOA-qI",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/generic_business-71.png"
-		}, {
-			"id": "2b30653438d3b588ab2e15087ed8404045f09fbd",
-			"location": {
-				"lat": 25.0622095,
-				"lng": 121.4570447
-			},
-			"name": "新北",
-			"place_id": "ChIJowet3KQCaDQRN0rk-e5iXV4",
-			"icon": "https:\/\/maps.gstatic.com\/mapfiles\/place_api\/icons\/geocode-71.png"
-		}],
-		"url": ""
-	},
-	"url": "",
-	"type": "ajax"
-}
-
+		
 	$(function(){
 		var redirect_type = "{$redirect_type}";
 		var order_address_limit = {$order_address_limit};
@@ -541,7 +346,6 @@ $(function(){
 		var map_config = {php echo json_encode($map);};//经纬度
 		var polygons = {};
 
-		//测试
 			var map,infoWindow;
 			// 定位经纬度
 		     var latlng = new google.maps.LatLng(map_config.center.location_x,map_config.center.location_y);
@@ -566,24 +370,33 @@ $(function(){
 			    			lng: map.center.lng()
 			    			};
 				        jwd = pos.lat+','+pos.lng;
-						
-	           				// 暂时注释，暂时无法请求，可以使用的
-	        //    			$.ajax({
-					    //     type: "get", //数据发送的方式（post 或者 get）
-					    //     url: "{php echo imurl('wmall/member/address/searchMap')}", //要发送的后台地址
-					    //     data: { key: jwd }, //要发送的数据（参数）格式为{'val1':"1","val2":"2"}
-					    //     dataType: "json", //后台处理后返回的数据格式
-					    //     success: function(data) {//ajax请求成功后触发的方法
-					    //         alert('请求成功');
-					    //     },
-					    //     error: function(msg) {//ajax请求失败后触发的方法
-					    //         console.log(msg); //弹出错误信息
-					    //     }
-					    // });
+	           			$.ajax({
+					        type: "get", //数据发送的方式（post 或者 get）
+					        url: "{php echo imurl('wmall/member/address/searchMap')}", //要发送的后台地址
+					        data: { key: jwd }, //要发送的数据（参数）格式为{'val1':"1","val2":"2"}
+					        dataType: "json", //后台处理后返回的数据格式
+					        success: function(data) {//ajax请求成功后触发的方法
+
+					            document.getElementById('locate-ls').innerHTML = "";// 清除上一次查询的结果
+								zhi = data.message.message;// 获取查询数据的集
+								delete zhi[0];// 去除指定的值
+								for (var p in zhi) {//遍历json数组时，这么写p为索引，zhi为参数值
+								name=zhi[p].name; //遍历出来的参数名
+								image=zhi[p].icon;//遍历出来的参数图标
+								id=zhi[p].place_id; //遍历出来的参数id
+								if(image !== 'https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png'){//去除最后一个数组
+									document.getElementById("locate-ls").innerHTML+="<img style='width:22px;height:22px;position:relative;top:35px;left:5px;' src="+image+"><\/img>";
+									document.getElementById("locate-ls").innerHTML+="<li onclick="+"clik('"+id+"')"+" style='width:80%;height:35px;padding:0px 0px 0px 0px;position:relative;left:34px;'>"+name+"<\/li>";
+								}
+								
+					         	}
+					        },
+					        error: function(msg) {//ajax请求失败后触发的方法
+					            // console.log(msg); //弹出错误信息
+					        }
+					    });
 
 		    		}.bind(this));
-		    		// infoWindow.setPosition(pos);
-		    		// infoWindow.setContent('老子在这');
 		    		infoWindow.open(map);
            			map.setCenter(pos);
 
@@ -592,14 +405,6 @@ $(function(){
 		    		handleLocationError(true, infoWindow, map.getCenter());
 		    	});
 		    }
-		 //    // 坐标显示
-		 //    var objMrk = new google.maps.Marker(
-			// 	{position: latlng,
-			// 	map:map}
-			// );
-			
-		//测试 
-
 		require(['tiny'], function(tiny){
 			tiny.getLocation(function(location) {
 				map.panTo([location.lng, location.lat]);
@@ -628,15 +433,6 @@ $(function(){
 				polygons[k] = polygon;
 			});
 		}
-
-		// 高德地图
-		// AMap.event.addListener(map, "dragend", function(){
-		// 	var center = map.getCenter();
-		// 	$('#lat').val(center.lat);
-		// 	$('#lng').val(center.lng);
-		// 	getPositionInfo(center.lat, center.lng);
-		// });
-
 		//谷歌地图 
 		google.maps.event.addListener(map,"dragend",function(event){
 			var center = map.getCenter();
@@ -655,7 +451,7 @@ $(function(){
 			$('#search-list').removeClass('hide');
 			$.post("{php echo imurl('wmall/home/location/suggestion');}", {key: key, type: redirect_type}, function(data){//获取搜索到的值
 				var result = $.parseJSON(data);//格式转换
-				console.log(result.message.message)
+				
 				if(result.message.error != -1) {
 					getAdress(result.message.message, '#search-list');
 				}
@@ -674,14 +470,6 @@ $(function(){
 			}
 
 		}); 
-
-		// 点击事件 全部-写字楼-小区-学校
-		// $(document).on('click', '.buttons-tab .button', function() {
-		// 		$(this).addClass('active').siblings().removeClass('active');
-		// 		var lat = $('#lat').val();
-		// 		var lng = $('#lng').val();
-		// 		region = $(this).addClass('active').siblings().removeClass('active').context.text;
-		// 	});
 		$(document).on('click', '.select-locate', function(){
 			var lng = $(this).data('lng');
 			var lat = $(this).data('lat');
@@ -723,13 +511,9 @@ $(function(){
 			return false;
 		});
 	});
-
-
-
-
-
 	// 附近街道商铺名称
 	function getPositionAdress(result){
+		console.log(result)
 		if(result.info == "OK"){
 			var re = [];
 			for(var i in result.pois){
@@ -756,31 +540,21 @@ $(function(){
 	function getAdress(re, container){
 		var addressHtml = '';
 		for(var i=0; i < re.length; i++){
-			addressHtml += '<li class="border-1px-b select-locate '+ (i == 0 ? 'locate-ls-active' : '') +'" data-lng="'+re[i]['lng']+'" data-lat="'+re[i]['lat']+'" data-name="'+re[i]['name']+'" data-address="'+re[i]['address']+'">';
-			addressHtml += '<div class="locate-ls-info">'+(i == 0 ? '[推荐位置]' : '')+'   '+re[i]['name']+' </span></div>';
-			addressHtml += '<span> '+re[i]['address']+' </span>';
+			var address = re[i].structured_formatting.secondary_text;
+			addressHtml += '<li class="border-1px-b select-locate '+ (i == 0 ? 'locate-ls-active' : '') +'" data-lng="'+re[i]['lng']+'" data-lat="'+re[i]['lat']+'" data-name="'+re[i]['description']+'" data-address="'+re[i]['description']+'">';
+
+			addressHtml += '<div class="locate-ls-info">'+(i == 0 ? '[推荐位置]' : '')+'   '+re[i]['description']+' </span></div>';
+
+			addressHtml += '<span> '+address+' </span>';
+
 			addressHtml += '</li>';
 		}
 		$(container).html(addressHtml);
 	}
 
-	var dt=document.getElementById('dt');
-	dt.onclick=function(){
-			document.getElementById('locate-ls').innerHTML = "";// 清除上一次查询的结果
-			var zhi = geshi.message.message;// 获取查询数据的集
-			delete zhi[0];// 去除指定的值
-			for (var p in zhi) {//遍历json数组时，这么写p为索引，zhi为参数值
-			name=zhi[p].name; //遍历出来的参数名
-			image=zhi[p].icon;//遍历出来的参数图标
-			id=zhi[p].id; //遍历出来的参数id
-			document.getElementById("locate-ls").innerHTML+="<img style='width:22px;height:22px;position:relative;top:35px;left:5px;' src="+image+"><\/img>";
-			document.getElementById("locate-ls").innerHTML+="<li onclick="+"clik('"+id+"')"+" style='width:80%;height:30px;padding:0px 0px 0px 0px;position:relative;left:34px;'>"+name+"<\/li>";
-         	}  	
-	}
 	function clik(e){
-			var zhi = geshi.message.message;
 			for (var p in zhi) {//遍历json数组时，这么写p为索引，0,1
-				id=zhi[p].id;
+				id=zhi[p].place_id;
 				if(e == id){
 						var geocoder = new google.maps.Geocoder;
 						name=zhi[p].name,

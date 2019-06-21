@@ -63,10 +63,12 @@ if(is_array($multi['site_info'])) {
 }
 unset($multi, $styleid, $style, $templateid, $template, $templates);
 
+
 if ($controller == 'wechat' && $action == 'card' && $do == 'use') {
 	header("location: index.php?i={$_W['uniacid']}&c=entry&m=paycenter&do=consume&encrypt_code={$_GPC['encrypt_code']}&card_id={$_GPC['card_id']}&openid={$_GPC['openid']}&source={$_GPC['source']}");
 	exit;
 }
+
 $controllers = array();
 $handle = opendir(IA_ROOT . '/app/source/');
 if(!empty($handle)) {

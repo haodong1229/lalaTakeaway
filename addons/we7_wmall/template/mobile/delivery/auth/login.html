@@ -58,8 +58,8 @@ require(['tiny'], function(tiny){
 		var mobile = $.trim($('input[name="mobile"]').val());
 		var areaNumber = $.trim($('#areaNumber').val());
 		var wholeNumber = areaNumber+mobile;
+		
 		if (areaNumber == '') {return $.toast('请选择区号'), !1 }
-
 		if(!mobile) {
 			$.toast('请输入手机号');
 			return false;

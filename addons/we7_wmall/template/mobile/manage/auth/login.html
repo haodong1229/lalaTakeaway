@@ -51,6 +51,7 @@
 	</div>
 </div>
 <script>
+
 require(['tiny'], function(tiny){
 	var force = "{$_GPC['force']}";
 	$('.button-login').click(function(){
@@ -78,6 +79,7 @@ require(['tiny'], function(tiny){
 			return false;
 		}
 		$this.addClass("disabled");
+		
 		$.post(tiny.getUrl('manage/auth/login'), {mobile: wholeNumber, password: password, force: force}, function(data){
 			var result = $.parseJSON(data);
 			if(!result.message.errno) {
