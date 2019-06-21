@@ -4,7 +4,7 @@ global $_W;
 global $_GPC;
 $sid = intval($_GPC["sid"]);
 $mobile = trim($_GPC["mobile"]);
-if( $mobile == "" ) 
+if( $mobile == "" )
 {
 	exit( "请输入手机号" );
 }
@@ -54,8 +54,15 @@ else
 }
 $content = array( "code" => $code );
 $config_sms = $_W["we7_wmall"]["config"]["sms"]["template"];
-$result = sms_send($config_sms["verify_code_tpl"], $mobile, $content, $sid);
-if( is_error($result) ) 
+//判断手机号前缀是否是86
+$checkMobile = substr($mobile,0,2);
+$chinaMobile = substr($mobile,2);
+if ($checkMobile == '86') {
+    $result = sms_send($config_sms["verify_code_tpl_china"], $chinaMobile, $content, $sid);
+} else {
+    $result = sms_send($config_sms["verify_code_tpl"], $mobile, $content, $sid);
+}
+if( is_error($result) )
 {
 	slog("alidayuSms", "阿里大鱼短信通知验证码", $content, $result["message"]);
 	exit( $result["message"] );

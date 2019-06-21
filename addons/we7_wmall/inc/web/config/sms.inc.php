@@ -20,11 +20,11 @@ else
 		$_W["page"]["title"] = "短信平台";
 		if( $_W["ispost"] ) 
 		{
-			$template = array( "verify_code_tpl" => trim($_GPC["verify_code_tpl"]) );
-			set_system_config("sms.template", $template);
+			$template = array( "verify_code_tpl" => trim($_GPC["verify_code_tpl"]) , "verify_code_tpl_china" => trim($_GPC["verify_code_tpl_china"]) );
+			set_system_config("sms.template", $template);//保存到数据库再加入到全局变量
 			imessage(error(0, "短信模板设置成功"), referer(), "ajax");
 		}
-		$sms = $_config["sms"]["template"];
+		$sms = $_config["sms"]["template"];//传值到前端
 	}
 	else 
 	{
@@ -41,5 +41,6 @@ else
 		}
 	}
 }
+//var_dump( $_W["we7_wmall"]["config"]["sms"] );die;
 include(itemplate("config/sms"));
 ?>

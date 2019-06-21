@@ -41,7 +41,8 @@
 						infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
 					});
 				} else {
-					var url = "http://m.amap.com/?q="+lat+","+lng+"&name="+name+"&address="+address;
+					// var url = "http://m.amap.com/?q="+lat+","+lng+"&name="+name+"&address="+address;
+                    var url = "https://www.google.com/maps/search/?api=1&query="+lat+","+lng;
 					location.href = url;
 				}
 				return false;

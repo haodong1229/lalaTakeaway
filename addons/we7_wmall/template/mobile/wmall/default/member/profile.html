@@ -111,6 +111,7 @@
 							<div class="item-title">手机号</div>
 							<div class="item-input">
 								<input type="number" max="11" name="mobile" placeholder="请输入手机号" value="{$user['mobile']}">
+								<span>(柬埔寨请加855,大陆请加86)</span>
 							</div>
 						</div>
 					</div>
@@ -219,11 +220,11 @@ require(['tiny'], function(tiny){
 			$.toast('请输入手机号');
 			return false;
 		}
-		var reg = /^[01][3456789][0-9]{9}/;
-		if(!reg.test(mobile)) {
-			$.toast('手机号格式错误');
-			return false;
-		}
+		// var reg = /^[01][3456789][0-9]{9}/;
+		// if(!reg.test(mobile)) {
+		// 	$.toast('手机号格式错误');
+		// 	return false;
+		// }
 		var code = $.trim($('input[name="code"]').val());
 		if(!code) {
 			$.toast('请输入短信验证码');

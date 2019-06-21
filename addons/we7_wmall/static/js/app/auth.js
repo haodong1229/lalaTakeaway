@@ -79,8 +79,10 @@ define(["tiny"], function (a) {
             if ($(this).hasClass("disabled")) return !1;
             var c = $.trim($('input[name="mobile"]').val());
             if (!c) return $.toast("请输入手机号"), !1;
-            var d = /^[01][3456789][0-9]{9}/;
-            if (!d.test(c)) return $.toast("手机号格式错误"), !1;
+            var areaNumber = $.trim($('#areaNumber').val());
+            var wholeNumber = areaNumber+c;
+            // var d = /^[01][3456789][0-9]{9}/;
+            // if (!d.test(c)) return $.toast("手机号格式错误"), !1;
             var e = $.trim($('input[name="code"]').val());
             if (!e) return $.toast("请输入短信验证码"), !1;
             var f = $.trim($('input[name="password"]').val());
@@ -91,7 +93,7 @@ define(["tiny"], function (a) {
             if (!d.test(f)) return $.toast("密码必须由数字和字母组合"), !1;
             var h = $.trim($('input[name="repassword"]').val());
             return h ? f != h ? ($.toast("两次密码输入不一致"), !1) : (b.addClass("disabled"), $.post(a.getUrl("wmall/auth/forget"), {
-                mobile: c,
+                mobile: wholeNumber,
                 password: f,
                 code: e
             }, function (a) {

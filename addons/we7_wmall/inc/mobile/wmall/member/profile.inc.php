@@ -89,7 +89,7 @@ if( $ta == "bind" )
 		}
 		$code = trim($_GPC["code"]);
 		$status = icheck_verifycode($mobile, $code);
-		if( !$status ) 
+		if( !$status )
 		{
 			imessage(error(-1, "验证码错误"), "", "ajax");
 		}

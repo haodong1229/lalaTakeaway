@@ -12,6 +12,7 @@ if( $op == "range" )
 		{
 			$_GPC["areas"] = str_replace("&nbsp;", "#nbsp;", $_GPC["areas"]);
 			$_GPC["areas"] = json_decode(str_replace("#nbsp;", "&nbsp;", html_entity_decode(urldecode($_GPC["areas"]))), true);
+        echo '<pre>';print_r( $_GPC["areas"] );die;
 			foreach( $_GPC["areas"] as $key => &$parent )
 			{
 				if( !empty($parent) )
@@ -43,7 +44,8 @@ if( $op == "range" )
 					}
 				}
 			}
-			set_config_text("平台配送区域", "delivery_areas", $_GPC["areas"]);
+//			echo '<pre>';print_r( $_GPC["areas"] );die;
+            set_config_text("平台配送区域", "delivery_areas", $_GPC["areas"]);
 		}
 		$range = array( "map" => array( "location_x" => trim($_GPC["map"]["lat"]), "location_y" => trim($_GPC["map"]["lng"]) ), "city" => trim($_GPC["city"]), "serve_radius" => floatval($_GPC["serve_radius"]), "status" => $status );
 		set_system_config("takeout.range", $range);

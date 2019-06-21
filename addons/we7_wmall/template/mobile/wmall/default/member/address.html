@@ -138,7 +138,7 @@ $(function(){
 					$.toast("手机号格式错误");
 					return false;
 			}
-			
+
 		}
 		var sex = $.trim($('.sex:checked').val());
 		if(!sex) {
@@ -338,7 +338,7 @@ $(function(){
 </div>
    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB33OZdr-ysIdajseeLAYYdxIAy2uJNCvM&libraries=places"></script>
 <script type="text/javascript">
-		
+
 	$(function(){
 		var redirect_type = "{$redirect_type}";
 		var order_address_limit = {$order_address_limit};
@@ -360,13 +360,13 @@ $(function(){
 		    	navigator.geolocation.getCurrentPosition(function(position) {
 		    		// 获取用户经纬度
 		    		pos = {
-		    			lat:position.coords.latitude, 
+		    			lat:position.coords.latitude,
 		    			lng: position.coords.longitude
-		    		};				
+		    		};
 			    	// 地图停止滑动时获取
 			    		google.maps.event.addListener(map, 'dragend', function (event) {
 			    			pos = {
-			    			lat: map.center.lat(), 
+			    			lat: map.center.lat(),
 			    			lng: map.center.lng()
 			    			};
 				        jwd = pos.lat+','+pos.lng;
@@ -388,7 +388,7 @@ $(function(){
 									document.getElementById("locate-ls").innerHTML+="<img style='width:22px;height:22px;position:relative;top:35px;left:5px;' src="+image+"><\/img>";
 									document.getElementById("locate-ls").innerHTML+="<li onclick="+"clik('"+id+"')"+" style='width:80%;height:35px;padding:0px 0px 0px 0px;position:relative;left:34px;'>"+name+"<\/li>";
 								}
-								
+
 					         	}
 					        },
 					        error: function(msg) {//ajax请求失败后触发的方法
@@ -433,13 +433,13 @@ $(function(){
 				polygons[k] = polygon;
 			});
 		}
-		//谷歌地图 
+		//谷歌地图
 		google.maps.event.addListener(map,"dragend",function(event){
 			var center = map.getCenter();
 			$('#lat').val(center.lat);
 			$('#lng').val(center.lng);
 			getPositionInfo(center.lat, center.lng);
-		});		
+		});
 
 		// 搜索框
 		$('#search').bind('input', function(){
@@ -451,7 +451,7 @@ $(function(){
 			$('#search-list').removeClass('hide');
 			$.post("{php echo imurl('wmall/home/location/suggestion');}", {key: key, type: redirect_type}, function(data){//获取搜索到的值
 				var result = $.parseJSON(data);//格式转换
-				
+
 				if(result.message.error != -1) {
 					getAdress(result.message.message, '#search-list');
 				}
@@ -469,7 +469,7 @@ $(function(){
 				location.href = href;
 			}
 
-		}); 
+		});
 		$(document).on('click', '.select-locate', function(){
 			var lng = $(this).data('lng');
 			var lat = $(this).data('lat');
@@ -521,7 +521,7 @@ $(function(){
 				re.push({'name':result.pois[i].name, 'address':result.pois[i].address, 'lng':location[0],'lat':location[1]});
 			}
 			getAdress(re, '#locate-ls');
-		} 
+		}
 
 		// else {
 		// 	alert('获取位置失败！');
@@ -532,7 +532,7 @@ $(function(){
 	function getPositionInfo(lat, lng){
 		var keywords = $.trim($('.buttons-tab .button.active').data('keywords'));
 		var types = '商务住宅|科教文化服务|地名地址信息|医疗保健服务|政府机构及社会团体|住宿服务|公司企业|道路附属设施|购物服务|生活服务|体育休闲服务|交通设施服务';
-		
+
 		$.getJSON('https://restapi.amap.com/v3/place/around?key=37bb6a3b1656ba7d7dc8946e7e26f39b&location='+lng+','+lat+'&types='+types+'&radius=1000&offset=25&page=1&extensions=all&output=json&keywords='+keywords+'&callback=getPositionAdress&json=?');
 
 	}
@@ -569,7 +569,7 @@ $(function(){
 									location.href = "{php echo imurl('wmall/member/address/post')}"+params;
 								}
 							}
-							
+
 						})
 				}
          	}
@@ -591,7 +591,7 @@ $(function(){
 			var params = '&'+lat+'&'+lng+'&address='+name;
 			location.href = "{php echo imurl('wmall/member/address/post')}"+params;
 		})
-		
+
 	}
 
 </script>

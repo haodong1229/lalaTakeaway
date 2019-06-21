@@ -1,7 +1,7 @@
 <?php  defined("IN_IA") or exit( "Access Denied" );
 global $_W;
 global $_GPC;
-$_W["page"]["title"] = "登录";
+$_W["page"]["title"] = "找回密码";
 $config_mall = $_W["we7_wmall"]["config"]["mall"];
 if( is_weixin() || !empty($_GPC["we7_wmall_member_session_" . $_W["uniacid"]]) ) 
 {

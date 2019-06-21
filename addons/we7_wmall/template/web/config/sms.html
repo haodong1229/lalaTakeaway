@@ -68,9 +68,14 @@
 	<h2>{$_W['page']['title']}</h2>
 	<form class="form-horizontal form form-validate" id="form1" action="" method="post" enctype="multipart/form-data">
 		<div class="form-group">
-			<label class="col-xs-12 col-sm-3 col-md-2 control-label">身份验证验证码 模板id</label>
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">身份验证验证码 模板id(国际)</label>
 			<div class="col-sm-9 col-xs-12">
 				<input type="text" class="form-control" name="verify_code_tpl" value="{$sms['verify_code_tpl']}" required="true">
+				<span class="help-block">请登录"阿里大鱼"短信平台,进入管理中心,进行验证码模板申请</span>
+			</div>
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">身份验证验证码 模板id(中国大陆)</label>
+			<div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="verify_code_tpl_china" value="{$sms['verify_code_tpl_china']}" required="true">
 				<span class="help-block">请登录"阿里大鱼"短信平台,进入管理中心,进行验证码模板申请</span>
 				<span class="help-block">
 					<strong class="text-danger">

@@ -134,19 +134,25 @@
 	<(/each)>
 	<div id="add-hour" class="btn btn-danger btn-block <(if isActive == 1)>disabled<(/if)>"><span class="icon icon-plus"></span>添加特殊时段</div>
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB33OZdr-ysIdajseeLAYYdxIAy2uJNCvM&libraries=geometry,drawing"></script>
+
 <script type="text/javascript" src="//webapi.amap.com/maps?v=1.4.1&key=550a3bf0cb6d96c3b43d330fb7d86950&plugin=AMap.MouseTool,AMap.PolyEditor,AMap.CircleEditor,AMap.Geocoder,AMap.ToolBar,AMap.Scale,AMap.OverView"></script>
+
 <script>
-irequire(['tmodtpl', 'web/geofence.new'],function(tmodtpl, geofence){
+// irequire(['tmodtpl', 'web/geofence.old_beifen'],function(tmodtpl, geofence){
+// irequire(['tmodtpl', 'web/geofence.new_beifen'],function(tmodtpl, geofence){
+irequire(['tmodtpl', 'web/geofence.new_6_21'],function(tmodtpl, geofence){
 	var params = {
 			areas: {php echo json_encode($range['delivery_areas']);},
 			tmodtpl: tmodtpl,
 			store: {
-				location_y: {if !empty($range['map']['location_y'])}{$range['map']['location_y']}{else}'116.397428'{/if},
-				location_x: {if !empty($range['map']['location_x'])}{$range['map']['location_x']}{else}'39.90923'{/if},
+				location_y: "{if !empty($range['map']['location_y'])}{$range['map']['location_y']}{else}'104.92836840209964'{/if}",
+				location_x: "{if !empty($range['map']['location_x'])}{$range['map']['location_x']}{else}'11.553827266385946'{/if}",
 			},
 			isChange: 1
 		};
-	// console.dir(params);
+	// console.dir(tmodtpl);
 	geofence.init(params);
 });
 </script>
