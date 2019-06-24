@@ -3,10 +3,10 @@ global $_W;
 global $_GPC;
 mload()->model("cover");
 $op = (trim($_GPC["op"]) ? trim($_GPC["op"]) : "index");
-$routers = array( "index" => array( "title" => "平台入口", "url" => ivurl("pages/home/index", array( ), true), "do" => "index" ), "manage" => array( "title" => "商家管理入口", "do" => "manage", "url" => imurl("manage/home/index", array( ), true) ), "settle" => array( "title" => "商家入驻入口", "do" => "settle", "url" => ivurl("pages/store/settle", array( ), true) ), "delivery" => array( "title" => "配送员入口", "do" => "delivery", "url" => imurl("delivery/home/index", array( ), true) ) );
+$routers = array( "index" => array( "title" => "平台入口", "url" => imurl("wmall/home/index", array( ), true), "do" => "index" ), "manage" => array( "title" => "商家管理入口", "do" => "manage", "url" => imurl("manage/home/index", array( ), true) ), "settle" => array( "title" => "商家入驻入口", "do" => "settle", "url" => imurl("manage/auth/register", array( ), true) ), "delivery" => array( "title" => "配送员入口", "do" => "delivery", "url" => imurl("delivery/home/index", array( ), true) ) );
 $router = $routers[$op];
 $_W["page"]["title"] = $router["title"];
-if( $_W["ispost"] ) 
+if( $_W["ispost"] )
 {
 	$keyword = (trim($_GPC["keyword"]) ? trim($_GPC["keyword"]) : imessage(error(-1, "关键词不能为空"), "", "ajax"));
 	$cover = array( "keyword" => trim($_GPC["keyword"]), "title" => trim($_GPC["title"]), "thumb" => trim($_GPC["thumb"]), "description" => trim($_GPC["description"]), "status" => intval($_GPC["status"]), "do" => $router["do"], "url" => $router["url"] );
