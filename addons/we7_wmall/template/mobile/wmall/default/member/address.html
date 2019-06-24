@@ -106,14 +106,9 @@
 	var name=arr[10]; //拿取地址名
 	var address=name.split("="); //分割地址名
 	var address1 = decodeURIComponent(address[1]);//解决从URL中拿取中文时出现的乱码现象
-	require(['tiny'], function(tiny){
-		tiny.getLocation(function(location) {}, function(position) {
-			$('#address').val(address1);
-			$('#lng').val(lng);
-			$('#lat').val(lat);
-			// $('#location').html(address1 + ' <i class="icon icon icon-arrow-right pull-right"></i>');
-		});
-	});
+	$('#address').val(address1);
+	$('#lng').val(lng);
+	$('#lat').val(lat);
 {/if}
 
 var redirect_url = "{$redirect_url}";
